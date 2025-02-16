@@ -69,6 +69,8 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx_proxy
+    build:
+      context: ./nginx
     restart: always
     depends_on:
       - backend
