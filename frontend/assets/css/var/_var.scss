@@ -1,0 +1,12 @@
+:root {
+  --main-pad: 1.5rem;
+  --btn-rad: 20px;
+
+  @include media-breakpoint-down(md) {
+    --main-pad: 1.2rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    --main-pad: 1.2rem;
+  }
+}

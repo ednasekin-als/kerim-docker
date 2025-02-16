@@ -1,0 +1,84 @@
+{
+  "ava": "Made by AVA Digital",
+  "head": {
+    "menuCl": "Закрыть меню",
+    "menuOp": "Открыть меню",
+    "proj": "Проекты",
+    "about": "О бюро",
+    "cont": "Контакты",
+    "form": "Напишите нам"
+  },
+  "main": {
+    "tit": "kerimov<br> arChitecture",
+    "tit1": "Архитектурное бюро международного класса",
+    "btn": {
+      "proj": "Проекты",
+      "projD": "Смотреть проект",
+      "about": "О бюро"
+    },
+    "prTit": "Все проекты"
+  },
+  "about": {
+    "tit": "Команда"
+  },
+  "form": {
+    "tit": "Обсудить вопрос",
+    "tit1": "Пожалуйста, опишите вашу задачу",
+    "name": "Имя",
+    "namePl": "Имя",
+    "email": "E-mail",
+    "emailPl": "email@mail.com",
+    "phone": "Телефон",
+    "phonePl": "+7 999 000 00 00",
+    "message": "Сообщение",
+    "messagePl": "Вопрос",
+    "text": "Текст",
+    "textPl": "Текст",
+    "file": "Файл",
+    "send": "Отправить",
+    "sendMes": "Сообщение отправлено",
+    "errorMes": "Ошибка, заполните выделенные поля",
+    "mess": "Наш менеджер свяжется с вами в течение дня",
+    "maxSize": "Общий объем файлов не больше 15мб",
+    "dz": {
+      "dictFallbackMessage": "Ваш браузер не поддерживает загрузку файлов drag'n'drop.",
+      "dictFallbackText": "Воспользуйтесь формой ниже, чтобы прикрепить файлы другим способом.",
+      "dictFileTooBig": "Файл слишком большой ({{filesize}}MiB). Максимальный размер: {{maxFilesize}}MiB.",
+      "dictInvalidFileType": "Вы не можете загрузить файлы этого типа.",
+      "dictResponseError": "Сервер ответил с помощью {{statusCode}} кода.",
+      "dictCancelUpload": "Отменить загрузку",
+      "dictUploadCanceled": "Загрузка отменена.",
+      "dictCancelUploadConfirmation": "Вы уверены, что хотите отменить загрузку?",
+      "dictRemoveFile": "Удалить файл",
+      "dictRemoveFileConfirmation": null,
+      "dictMaxFilesExceeded": "Вы больше не можете загружать файлы.",
+      "dictDefaultMessage": "<stong>Добавьте сюда</stong> файлы для загрузки"
+    }
+  },
+  "cont": {
+    "tit": "Контакты",
+    "soc": "Соцсети"
+  },
+  "error": {
+    "descr": "Страница не найдена"
+  },
+  "proj": {
+    "tit": "Проекты",
+    "btn": {
+      "map": "Карта",
+      "list": "Список",
+      "grid": "Сетка",
+      "view": "Смотреть проект",
+      "backPr": "Вернуться ко всем проектам",
+      "year": "Год",
+      "country": "Страна"
+    }
+  },
+  "menu": {
+    "menu": "Меню",
+    "pages": "Страницы",
+    "more": "Показать еще"
+  },
+  "notFound": "Проектов не найдено",
+  "vac": "Вакансии"
+}

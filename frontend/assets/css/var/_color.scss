@@ -1,0 +1,49 @@
+$black: #080808;
+$red: #ff0000;
+$red-dark: #b40000;
+$white: #ffffff;
+
+:root {
+  --black: #080808;
+  --red: #ff0000;
+  --red-dark: #b40000;
+  --white: #ffffff;
+  --grey: #ddd;
+}
+
+[data-theme='true'] {
+  --white: #080808;
+  --black: #ffffff;
+  --grey: #080808;
+}
+
+.c {
+  &_w {
+    color: var(--white);
+  }
+
+  &_r {
+    color: var(--red);
+  }
+
+  &_rd {
+    color: var(--red-dark);
+  }
+}
+
+.bg {
+  &_w {
+    background-color: var(--white);
+    color: var(--black);
+  }
+
+  &_b {
+    background-color: var(--black);
+    color: var(--white);
+  }
+
+  &_b {
+    background-color: var(--red-dark);
+    color: var(--white);
+  }
+}
