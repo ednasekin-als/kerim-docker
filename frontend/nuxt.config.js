@@ -12,6 +12,7 @@ export default {
   target: "server",
 
   axios: {
+    baseURL: 'https://kerimovarchitects.com',
     proxy: true,
   },
 
