@@ -52,18 +52,6 @@ services:
     networks:
       - app_network
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx_proxy
-    restart: always
-    depends_on:
-      - backend
-      - frontend
-    ports:
-      - "${NGINX_PORT}:80"
-    networks:
-      - app_network
-
 volumes:
   mysql_data:
   wp_data:

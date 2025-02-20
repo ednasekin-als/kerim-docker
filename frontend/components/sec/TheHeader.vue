@@ -1,5 +1,5 @@
 <template>
-  <header class="header row">
+  <header :class="['header row', { 'header__opacity': menu }]">
     <div :class="`wrap__head d-lg-none ${(menu) ? 'wrap__head_openMenu' : ''}`">
       <button :class="`openMenu ${(menu) ? 'active' : ''} `" @click="toggleMenu()" :menu="menu">
       </button>
@@ -127,6 +127,11 @@ export default ({
   backdrop-filter: saturate(180%) blur(20px);
   background: rgba(242, 242, 242, .65);
   z-index: 5;
+
+  &__opacity {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 
   &__nav {
     flex: max-content;

@@ -82,7 +82,7 @@
             <div v-swiper="swiperOption" class="PrDet__slider">
               <div class="swiper-wrapper">
                 <div v-for="(item, key) in allGal" :key="key" class="swiper-slide">
-                  <template v-if="isYouTubeVideo(item)">
+                  <template v-if="item && isYouTubeVideo(item)">
                     <div class="PrDet__slide">
                       <iframe width="90%" height="400" :src="embedYouTubeURL(item)" frameborder="0"
                         allowfullscreen></iframe>
@@ -207,20 +207,24 @@ export default {
       setTimeout(() => {
         window.scrollBy(0, 1);
         window.scrollTo(0, 1);
-        console.log(123);
       }, 300);
     });
     // Задержка вызова window.scrollTo для Safari
     setTimeout(() => {
       window.scrollBy(0, 1);
       window.scrollTo(0, 1);
-      console.log(123);
     }, 0);
-    this.post.gal.forEach(el => {
-      this.allGal.push(el.vid || el.img)
+    this.post?.gal?.forEach(el => {
+      if (typeof el.vid === 'string') {
+        this.allGal.push(el.vid);
+      } else if (typeof el.img === 'string') {
+        this.allGal.push(el.img);
+      }
     })
-    this.post.gal_m.forEach(el => {
-      this.allGal.push(el)
+    this.post?.gal_m?.forEach(el => {
+      if (typeof el === 'string') {
+        this.allGal.push(el);
+      }
     })
     this.$store.dispatch('updateActivePr', this.post);
   },
@@ -230,7 +234,7 @@ export default {
   methods: {
     // Проверяет, является ли ссылка на YouTube видео
     isYouTubeVideo(url) {
-      return url.includes("youtu.be") || url.includes("youtube.com");
+      return typeof url === 'string' && (url.includes("youtu.be") || url.includes("youtube.com"));
     },
     // Возвращает URL для вставки видео YouTube
     embedYouTubeURL(url) {
