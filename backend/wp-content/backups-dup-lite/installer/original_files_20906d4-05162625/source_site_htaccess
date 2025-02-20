@@ -1,0 +1,25 @@
+# This file was updated by Duplicator on 2023-10-13 11:43:40.
+# See the original_files_ folder for the original source_site_htaccess file.
+# BEGIN WordPress
+# Директивы (строки) между `BEGIN WordPress` и `END WordPress`
+# созданы автоматически и подлежат изменению только через фильтры WordPress.
+# Сделанные вручную изменения между этими маркерами будут перезаписаны.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(bmp|cur|gif|ico|jpg|jpeg|png|svgz?|webp|pdf)$">
+           Header set Access-Control-Allow-Origin "*"
+            Header set Access-Control-Allow-Methods "GET,POST,OPTIONS,DELETE,PUT"
+        </FilesMatch>
+    </IfModule>
+</IfModule>
