@@ -11,14 +11,12 @@ export default {
   ssr: true,
   target: "server",
 
-  axios: {
-    baseURL: 'https://kerimovarchitects.com',
-    proxy: true,
-  },
-
-  proxy: {
-    '/wp-json/': {
-      target: backend,
+  nitro: {
+    devProxy: {
+      '/wp-json/': {
+        target: 'http://backend:80',
+        changeOrigin: true,
+      },
     },
   },
 
@@ -101,11 +99,8 @@ export default {
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@/modules/sitemapRouteGenerator"],
-
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "nuxt-i18n", "@nuxtjs/sitemap", "nuxt-vue-select"],
+  modules: ["nuxt-vue-select", "@pinia/nuxt", "@nuxtjs/i18n", "@nuxtjs/sitemap"],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

@@ -1,10 +1,12 @@
-FROM node:16
+FROM node:20
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --omit=dev
+RUN npm cache clean --force \
+    && rm -rf node_modules package-lock.json \
+    && npm install --legacy-peer-deps
 
 COPY . .
 

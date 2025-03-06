@@ -1,10 +1,8 @@
-FROM node:16
-
-ENV DOCKER_DEV 1
+FROM node:20-bullseye-slim
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install
 
