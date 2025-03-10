@@ -1,4 +1,4 @@
-FROM wordpress:6.5.3
+FROM wordpress:php7.4-apache
 
 RUN chown -R www-data:www-data /var/www/html
 

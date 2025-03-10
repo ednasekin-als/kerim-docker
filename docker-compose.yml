@@ -19,7 +19,6 @@ services:
       - app_network
 
   backend:
-    image: wordpress:6.5.3
     build: ./backend
     container_name: backend
     restart: always
