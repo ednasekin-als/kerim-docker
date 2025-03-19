@@ -7,7 +7,7 @@
                     v-html="item[$i18n.locale + '_tit'] || item.name" @click="clickCat(item)"></button>
             </div>
         </div>
-        <div class="padO">
+        <!-- <div class="padO">
             <client-only>
                 <div class="wrapFilt">
                     <v-select :filterable="false" :searchable="false" :options="country" :label="$i18n.locale + '_tit'"
@@ -22,7 +22,7 @@
                     </v-select>
                 </div>
             </client-only>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

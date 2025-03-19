@@ -1,21 +1,16 @@
-export default ({ app }) => {
-  app.nuxt.defaultTransition.beforeEnter = () => {
-    app.i18n.finalizePendingLocaleChange();
-  };
+export default defineNuxtPlugin((nuxtApp) => {
+  const router = useRouter();
+  const { $i18n } = useNuxtApp();
 
-  // Optional: wait for locale before scrolling for a smoother transition
-  app.router.options.scrollBehavior = async (to, from, savedPosition) => {
-    // Make sure the route has changed
+  nuxtApp.hook("page:transition:before", () => {
+    $i18n.finalizePendingLocaleChange();
+  });
+
+  router.options.scrollBehavior = async (to, from, savedPosition) => {
     if (to.name !== from.name) {
-      await app.i18n.waitForPendingLocaleChange();
+      await $i18n.waitForPendingLocaleChange();
     }
-    let position = { // default, mimics the top position on navigation
-      x: 0,
-      y: 0,
-    };
 
-    if (savedPosition) {
-      position = savedPosition;
-    }
+    return savedPosition || { top: 0 };
   };
-};
+});

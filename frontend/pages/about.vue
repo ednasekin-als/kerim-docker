@@ -1,6 +1,5 @@
 <template>
   <div class="">
-
     <div class="AbPad AbFirst">
       <div class="row">
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md- col-20 offset- '>
@@ -18,7 +17,7 @@
         <p class="p1 postContent" v-html="page[locale + '_val3']"></p>
       </div>
     </div>
-    <CompTeamGal :teamData="page[locale + '_team']" />
+    <!-- <CompTeamGal :teamData="page[locale + '_team']" /> -->
     <div v-for="(itemL, key) in page[locale + '_inf']" class="AbPad">
       <p class="h2 mp0 btnUL">
         {{ itemL.name }}
@@ -45,14 +44,14 @@
         <div v-if="!(key % 2)"
           class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 position-static'>
           <a v-if="item.link" class="awwI__link p1 mp0 abLink" target="_blank" :href="item.link">{{ item.name
-            }}</a>
+          }}</a>
           <p v-else class="awwI__link p1 mp0">{{ item.name }}</p>
           <img v-if="item.img" class="awwI__img d-none d-lg-block" :src="item.img" alt="">
         </div>
         <div v-else
           class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 position-static'>
           <a v-if="item.link" class="awwI__link p1 mp0 abLink" target="_blank" :href="item.link">{{ item.name
-            }}</a>
+          }}</a>
           <p v-else class="awwI__link p1 mp0">{{ item.name }}</p>
           <img v-if="item.img" class="awwI__img d-none d-lg-block" :src="item.img" alt="">
         </div>
@@ -309,101 +308,60 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
 import FsLightbox from "fslightbox-vue";
-import Accordion from '@/assets/js/accordion.client.js';
+import { useMain } from '~/store/main';
 
-export default {
-    name: 'about',
-    components: { FsLightbox },
+const store = useMain();
+const { $i18n } = useNuxtApp();
 
-    head() {
-      const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
-      return {
-        title: this.page[this.locale + '_seo_tit'],
-        htmlAttrs: {
-          ...i18nHead.htmlAttrs
-        },
-        meta: [
-          {
-            hid: 'description',
-            name: 'description',
-            content: this.page[this.locale + '_seo_des'],
-          },
-          { rel: "canonical", href: "https://kerimovarchitects.com" + (this.locale == "en" ? "/en" : '') + "/about" },
-          { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/about" },
-          {
-            rel: "alternate",
-            hreflang: "en-US",
-            href: "https://kerimovarchitects.com/en/about",
-          },
-        ],
-      }
-    },
-    data: () => ({
-      toggler: false,
-      accList: [],
-      awwLCount: 10,
-      pubLCount: 10,
-      eveLCount: 10,
-      optSl: {
-        // type: 'loop',
-        padding: '5rem',
-        // rewind: true,
-        perPage: 2,
-        gap: '5rem',
-        arrows: true,
-        // autoplay: true,
-        breakpoints: {
-          1024: {
-            perPage: 2,
-          },
-          767: {
-            perPage: 1,
-          },
-        },
-      },
-      popT: null
-    }),
-    methods: {
-      openPopT(item) {
-        this.popT = item
-      },
-      closePopT() {
-        this.popT = null
-      }
-    },
+const locale = $i18n.locale;
+const toggler = ref(false);
+const accList = ref([]);
+const awwLCount = ref(10);
+const pubLCount = ref(10);
+const eveLCount = ref(10);
+const popT = ref(null);
 
-    async fetch({ store }) {
-      await store.dispatch('getPage');
-    },
+await store.getPage();
 
-    computed: {
-      ...mapState({
-        pages: 'pages',
-      }),
+const page = computed(() => store.pages.find(el => el.id === 24));
 
-      locale() {
-        return this.$i18n.locale;
-      },
-      page() {
-        return this.pages.find((el) => el.id === 24)
-      },
-    },
+const { data: pageInfo } = useAsyncData('pages',
+  async () => {
+    const [pages] = await Promise.all([
+      $fetch('/wp-json/wp/v2/pages?per_page=100'),
+    ]);
 
-    mounted() {
-      window.scrollTo(0, 0);
-      this.$nextTick(() => {
-        document.querySelectorAll('.accI').forEach((el, key) => {
-          this.accList[key] = new Accordion(el, {
-            showMultiple: true,
-          });
-        })
-      })
-    },
+    return {
+      pages,
+    };
+  },
+  {
+    lazy: false,
   }
+);
 
+const pageSSR = computed(() => pageInfo.value?.pages.find(el => el.id === 24));
+const seoTitle = computed(() => pageSSR.value?.[locale.value + "_seo_tit"]);
+const seoDescription = computed(() => pageSSR.value?.[locale.value + "_seo_des"]);
+const canonicalUrl = computed(() => `https://kerimovarchitects.com${locale.value === "en" ? "/en" : ""}/about`);
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/about" },
+    { rel: "alternate", hreflang: "en-US", href: "https://kerimovarchitects.com/en/about" },
+  ],
+});
 </script>
 
 <style lang="scss" scoped>

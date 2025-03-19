@@ -13,7 +13,7 @@ export default ({
     },
     methods: {
         closeMenu() {
-            this.$store.dispatch("updateOpenMenu", false);
+            // this.$store.dispatch("updateOpenMenu", false);
         }
     }
 })

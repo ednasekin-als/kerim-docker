@@ -1,0 +1,50 @@
+{
+  "ava": "Made by AVA Digital",
+  "head": {
+    "menuCl": "Close menu",
+    "menuOp": "Open menu",
+    "proj": "Projects",
+    "about": "About Bureau",
+    "cont": "Contacts",
+    "form": "Form"
+  },
+  "main": {
+    "tit": "kerimov arChitecture",
+    "tit1": "International Architectural Bureau",
+    "btn": {
+      "proj": "Projects",
+      "projD": "View Project",
+      "about": "About"
+    },
+    "prTit": "go to the projects section"
+  },
+  "about": {
+    "tit": "Team"
+  },
+  "cont": {
+    "tit": "Contacts",
+    "soc": "Socials"
+  },
+  "error": {
+    "descr": "The page was not found"
+  },
+  "proj": {
+    "tit": "Projects",
+    "btn": {
+      "map": "Map",
+      "list": "List",
+      "grid": "Grid",
+      "view": "View Project",
+      "backPr": "Go back to all projects",
+      "year": "Year",
+      "country": "Country"
+    }
+  },
+  "menu": {
+    "menu": "Menu",
+    "pages": "Pages",
+    "more": "Load more"
+  },
+  "notFound": "No projects found",
+  "vac": "Vacancies"
+}

@@ -7,27 +7,15 @@ interface Page {
   [key: string]: any;
 }
 
-interface Project extends Page { }
-
-interface Category {
-  count: number;
-  order: number;
-  [key: string]: any;
-}
-
-interface Year extends Category { }
-
-interface Country extends Category { }
-
 export const useMain = defineStore("main", () => {
   const prel = ref(1);
   const openMenu = ref(true);
   const pages = ref<Page[]>([]);
-  const activePr = ref<Project | null>(null);
-  const projects = ref<Project[]>([]);
-  const CCatPr = ref<Category[]>([]);
-  const CYearPr = ref<Year[]>([]);
-  const CCountryPr = ref<Country[]>([]);
+  const activePr = ref(null);
+  const projects = ref<any[]>([]);
+  const CCatPr = ref<any[]>([]);
+  const CYearPr = ref<any[]>([]);
+  const CCountryPr = ref<any[]>([]);
   const size = ref<"small" | "medium" | "large">("small");
 
   const updateSize = (newSize: "small" | "medium" | "large") => {
@@ -49,33 +37,30 @@ export const useMain = defineStore("main", () => {
     pages.value = newPages;
   };
 
-  const updateActivePr = (newActivePr: Project | null) => {
+  const updateActivePr = (newActivePr: any | null) => {
     activePr.value = newActivePr;
   };
 
-  const updateProjects = (newProjects: Project[]) => {
+  const updateProjects = (newProjects: any[]) => {
     projects.value = newProjects;
   };
 
-  const updateCCatPr = (newCCatPr: Category[]) => {
+  const updateCCatPr = (newCCatPr: any[]) => {
     CCatPr.value = newCCatPr;
   };
 
-  const updateCYearPr = (newCYearPr: Year[]) => {
+  const updateCYearPr = (newCYearPr: any[]) => {
     CYearPr.value = newCYearPr;
   };
 
-  const updateCCountryPr = (newCCountryPr: Country[]) => {
+  const updateCCountryPr = (newCCountryPr: any[]) => {
     CCountryPr.value = newCCountryPr;
   };
 
-  // 🌐 Async Actions
   const getPage = async () => {
     try {
-      const { data } = await useFetch<Page[]>('/wp-json/wp/v2/pages?per_page=100');
-      if (data.value) {
-        updatePages(data.value.filter((el) => el.status === 'publish'));
-      }
+      const data = await $fetch<Page[]>('/wp-json/wp/v2/pages?per_page=100');
+      updatePages(data);
     } catch (error) {
       console.error("Failed to fetch pages:", error);
     }
@@ -83,10 +68,8 @@ export const useMain = defineStore("main", () => {
 
   const getProjects = async () => {
     try {
-      const { data } = await useFetch<Project[]>('/wp-json/wp/v2/projects?per_page=100');
-      if (data.value) {
-        updateProjects(data.value.filter((el) => el.status === "publish"));
-      }
+      const data: any[] = await $fetch('/wp-json/wp/v2/projects?per_page=100');
+      updateProjects(data.filter((el) => el.status === "publish"));
     } catch (error) {
       console.error("Failed to fetch projects:", error);
     }
@@ -94,9 +77,9 @@ export const useMain = defineStore("main", () => {
 
   const getCCatPr = async () => {
     try {
-      const { data } = await useFetch<Category[]>('wp-json/wp/v2/cat?per_page=100');
-      if (data.value) {
-        const filteredCatPr = data.value
+      const data: any[] = await $fetch('wp-json/wp/v2/cat?per_page=100');
+      if (data) {
+        const filteredCatPr = data
           .filter((el) => el.count) // Фильтрация
           .sort((a, b) => b.order - a.order); // Сортировка
         updateCCatPr(filteredCatPr);
@@ -108,9 +91,9 @@ export const useMain = defineStore("main", () => {
 
   const getCYearPr = async () => {
     try {
-      const { data } = await useFetch<Year[]>('/wp-json/wp/v2/year?per_page=100');
-      if (data.value) {
-        const filteredYearPr = data.value
+      const data: any[] = await $fetch('/wp-json/wp/v2/year?per_page=100');
+      if (data) {
+        const filteredYearPr = data
           .filter((el) => el.count) // Фильтрация
           .sort((a, b) => b.order - a.order); // Сортировка
         updateCYearPr(filteredYearPr);
@@ -122,9 +105,9 @@ export const useMain = defineStore("main", () => {
 
   const getCCountryPr = async () => {
     try {
-      const { data } = await useFetch<Country[]>('/wp-json/wp/v2/country?per_page=100');
-      if (data.value) {
-        const filteredCountryPr = data.value
+      const data: any[] = await $fetch('/wp-json/wp/v2/country?per_page=100');
+      if (data) {
+        const filteredCountryPr = data
           .filter((el) => el.count) // Фильтрация
           .sort((a, b) => b.order - a.order); // Сортировка
         updateCCountryPr(filteredCountryPr);

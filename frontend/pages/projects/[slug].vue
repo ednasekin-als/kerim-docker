@@ -175,13 +175,13 @@ export default {
   },
   computed: {
     projects() {
-      return this.$store.state.projects;
+      // return this.$store.state.projects;
     },
     filteredProjects() {
       return this.projects.filter(project => project.slug !== this.slug);
     },
     posts() {
-      return this.$store.state.projects;
+      // return this.$store.state.projects;
     },
     post() {
       return this.posts.find(el => el.slug === this.slug);
@@ -226,10 +226,10 @@ export default {
         this.allGal.push(el);
       }
     })
-    this.$store.dispatch('updateActivePr', this.post);
+    // this.$store.dispatch('updateActivePr', this.post);
   },
   beforeDestroy() {
-    this.$store.dispatch('updateActivePr', null)
+    // this.$store.dispatch('updateActivePr', null)
   },
   methods: {
     // Проверяет, является ли ссылка на YouTube видео

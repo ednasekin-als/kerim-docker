@@ -1,67 +1,15 @@
 <template>
-    <div :data-theme="darkMode" v-bind:class="['wrap', { 'wrap_small': this.$store.state.openMenu }]">
-        <SecTheHeader />
-        <div class="wrap__r">
-            <Nuxt class="wrapP" />
-        </div>
-        <CompScrollTop />
-        <SecTheFooter />
-    </div>
+  <div>
+      <SecTheHeader />
+      <div class="wrap__r">
+        <slot />
+      </div>
+      <CompScrollTop />
+      <SecTheFooter />
+  </div>
 </template>
-<script>
-
-export default {
-    name: "LayDef",
-    mounted() {
-        const isMenuOpen = this.getInitialIsMenuOpen();
-        this.$store.dispatch("updateOpenMenu", isMenuOpen);
-    },
-    methods: {
-        getInitialIsMenuOpen() {
-            if (typeof localStorage !== 'undefined') {
-                const storedValue = localStorage.getItem('isMenuOpen');
-                return storedValue !== null ? storedValue === 'true' : false;
-            }
-
-            return false;
-        },
-    },
-}
-
-</script>
-
 
 <script setup>
-import { ref } from 'vue';
-
-const getInitialDarkMode = () => {
-    if (typeof localStorage !== 'undefined') {
-        const storedValue = localStorage.getItem('darkMode');
-        return storedValue !== null ? storedValue === 'true' : false;
-    }
-    return false;
-};
-
-const darkMode = ref(getInitialDarkMode());
-
-const saveDarkModePreference = (isDarkMode) => {
-    if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('darkMode', isDarkMode.toString());
-    }
-};
-
-const toggleDarkMode = () => {
-    darkMode.value = !darkMode.value;
-    saveDarkModePreference(darkMode.value);
-};
-
-if (typeof localStorage !== 'undefined') {
-    window.addEventListener('beforeunload', () => {
-        saveDarkModePreference(darkMode.value);
-    });
-}
-
-
 </script>
 
 <style lang="scss">

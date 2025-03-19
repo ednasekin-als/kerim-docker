@@ -9,7 +9,7 @@
     </div>
 </template>
 <script>
-export default ({
+export default {
     name: 'PrGrid',
     props: {
         projects: {
@@ -17,7 +17,7 @@ export default ({
             required: true
         },
     },
-})
+}
 </script>
 <style lang="scss" scoped>
 .PrGrid {}

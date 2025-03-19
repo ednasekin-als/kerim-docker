@@ -5,23 +5,20 @@
       </button>
     </div>
     <div class='header__logo'>
-      <NuxtLink :to="localePath('/')" class="headerLogo">
+      <NuxtLink :to="'/'" class="headerLogo">
         <p class="p1">Kerimov Architects</p>
       </NuxtLink>
     </div>
     <div class="header__nav">
       <ul class="header__menu">
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }"
-            :to="localePath('/projects')">{{ $t('head.proj') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }" :to="localePath('/projects')">{{ $t('head.proj') }}</nuxt-link>
         </li>
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }"
-            :to="localePath('/about')">{{ $t('head.about') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }" :to="localePath('/about')">{{ $t('head.about') }}</nuxt-link>
         </li>
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }"
-            :to="localePath('/contacts')">{{ $t('head.cont') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }" :to="localePath('/contacts')">{{ $t('head.cont') }}</nuxt-link>
         </li>
       </ul>
     </div>
@@ -66,39 +63,25 @@
   </header>
 </template>
 
+<script setup>
+const menu = ref(false);
 
-<script>
+const route = useRoute();
+const { $i18n } = useNuxtApp();
+const localePath = useLocalePath();
+const switchLocalePath = useSwitchLocalePath();
 
-export default ({
-  name: 'TheHeader',
-  props: {
-    page: {
-      type: Object,
-    },
-  },
-  data: () => ({
-    menu: false,
-    header: false,
-    count: 5
-  }),
-  methods: {
-    toggleMenu() {
-      this.menu = !this.menu;
-    },
-    zeroFirst(num) {
-      return (num > 9) ? num : "0" + num;
-    },
-    headerClose() {
-      this.header = !this.header;
-    },
-    isLinkActive(route) {
-      return this.$route.path === route;
-    },
-  },
-  // beforeEnter() {
-  //     this.$i18n.finalizePendingLocaleChange()
-  // }
-})
+const toggleMenu = () => {
+  menu.value = !menu.value;
+};
+
+const isLinkActive = (path) => {
+  return route.path.includes(localePath(path));
+};
+
+console.log('localePath /projects:', localePath('/projects'));
+console.log('localePath /about:', localePath('/about'));
+
 </script>
 
 <style scoped lang="scss">

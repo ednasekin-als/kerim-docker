@@ -13,7 +13,7 @@
 export default {
     props: ['error'],
     beforeMount() {
-        this.$store.dispatch("getPage");
+        // this.$store.dispatch("getPage");
     }
 }
 </script>

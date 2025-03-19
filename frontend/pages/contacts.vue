@@ -61,51 +61,63 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { useMain } from '~/store/main';
 
-export default {
-  head() {
-    const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
+const store = useMain();
+const { $i18n } = useNuxtApp();
+
+const locale = $i18n.locale;
+
+await store.getPage();
+
+const page = computed(() => store.pages.find(el => el.id === 27));
+
+const { data: pageInfo } = useAsyncData('pages',
+  async () => {
+    const [pages] = await Promise.all([
+      $fetch('/wp-json/wp/v2/pages?per_page=100'),
+    ]);
+
     return {
-      title: this.page[this.$i18n.locale + '_seo_tit'],
-      htmlAttrs: {
-        ...i18nHead.htmlAttrs
-      },
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page[this.$i18n.locale + '_seo_des'],
-        },
-        { rel: "canonical", href: "https://kerimovarchitects.com" + (this.$i18n.locale == "en" ? "/en" : '') + "/contacts" },
-        { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/contacts" },
-        {
-          rel: "alternate",
-          hreflang: "en-US",
-          href: "https://kerimovarchitects.com/en/contacts",
-        },
-      ],
-    }
+      pages,
+    };
   },
-
-  async fetch({ store }) {
-    await store.dispatch('getPage');
-  },
-
-  computed: {
-    ...mapState({
-      pages: 'pages',
-    }),
-
-    locale() {
-      return this.$i18n.locale;
-    },
-    page() {
-      return this.pages.find((el) => el.id === 27)
-    },
+  {
+    lazy: false,
   }
-};
+);
+
+const pageSSR = computed(() => pageInfo.value?.pages.find(el => el.id === 27));
+const seoTitle = computed(() => {
+  const key = locale.value + "_seo_tit";
+  return pageSSR.value?.[key];
+});
+
+const seoDescription = computed(() => {
+  const key = locale.value + "_seo_des";
+  return pageSSR.value?.[key];
+});
+
+const canonicalUrl = computed(() => {
+  return "https://kerimovarchitects.com" + (locale.value === "en" ? "/en/contacts" : "/contacts");
+});
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/contacts" },
+    { rel: "alternate", hreflang: "en-US", href: "https://kerimovarchitects.com/en/contacts" },
+  ]
+});
 </script>
 
 <style lang="scss" scoped>

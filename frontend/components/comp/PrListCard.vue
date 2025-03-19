@@ -11,43 +11,42 @@
         </div>
     </NuxtLink>
 </template>
-<script>
 
+<script setup>
+import { useMain } from '~/store/main';
 
-export default ({
-    name: 'PrListCard',
-    data() {
-        return {
-            showImg2: false,
-        }
-    },
-    props: {
-        project: {
-            type: Object,
-        },
-    },
-    computed: {
-        cat() {
-            return this.$store.state.CCatPr
-        },
-        pr() {
-            return this.project
-        },
-    },
-    mounted() {
-        this.interval = setInterval(() => {
-            if (Math.random() < 0.1) {
-                this.showImg2 = !this.showImg2
-            }
-        }, 3000 + Math.random() * 3000);
-    },
+const store = useMain();
+const { $i18n } = useNuxtApp();
+const localePath = useLocalePath();
 
-    beforeDestroy() {
-        console.log("bD")
-        clearInterval(this.interval)
-    },
-})
+const props = defineProps({
+  project: {
+    type: Object,
+    required: true,
+  },
+});
+
+await store.getCCatPr();
+
+const cat = computed(() => store.CCatPr);
+const showImg2 = ref(false);
+const interval = ref(null);
+
+onMounted(() => {
+  interval.value = setInterval(() => {
+    if (Math.random() < 0.1) {
+      showImg2.value = !showImg2.value;
+    }
+  }, 3000 + Math.random() * 3000);
+});
+
+onBeforeUnmount(() => {
+  if (interval.value) {
+    clearInterval(interval.value);
+  }
+});
 </script>
+
 <style lang="scss" scoped>
 .PrListCard {
     position: relative;

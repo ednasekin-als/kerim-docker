@@ -9,14 +9,14 @@
     </div>
 </template>
 <script>
-export default ({
+export default {
     name: 'PrList',
     props: {
         projects: {
             type: Array,
         },
     },
-})
+}
 </script>
 <style lang="scss" scoped>
 .PrList {}
