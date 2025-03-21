@@ -3,29 +3,28 @@
     <div class="pPr__head">
       <div class="row">
         <div class='col-12'>
-          <h1 class="h1">{{ $t('proj.tit') }}</h1>
+          <h1 class="h1">{{ $i('proj.tit') }}</h1>
         </div>
         <div class='col-12'>
-          <span class="h1">{{ (type == 'grid') ? projects.length : (type == 'list') ? filtPrCount : ''
-            }}</span>
+          <span class="h1">{{ type === 'grid' ? projectsSSR.length : type === 'list' ? filtPrCount : '' }}</span>
         </div>
       </div>
       <div class="tagList d-none d-lg-block">
-        <button :class="`tag tag_d p1 ${(type == 'grid' ? 'active' : '')}`" @click="changeType('grid')">
-          {{ $t('proj.btn.grid') }}
+        <button :class="`tag tag_d p1 ${type === 'grid' ? 'active' : ''}`" @click="changeType('grid')">
+          {{ $i('proj.btn.grid') }}
         </button>
-        <button :class="`tag tag_d p1 ${(type == 'list' ? 'active' : '')}`" @click="changeType('list')">
-          {{ $t('proj.btn.list') }}
+        <button :class="`tag tag_d p1 ${type === 'list' ? 'active' : ''}`" @click="changeType('list')">
+          {{ $i('proj.btn.list') }}
         </button>
-        <button :class="`tag tag_d p1 ${(type == 'map' ? 'active' : '')}`" @click="changeType('map')">
-          {{ $t('proj.btn.map') }}
+        <button :class="`tag tag_d p1 ${type === 'map' ? 'active' : ''}`" @click="changeType('map')">
+          {{ $i('proj.btn.map') }}
         </button>
       </div>
     </div>
     <SecProjPrFilt :cat="cat" :country="country" :year="year" @changeFilter="changeFilter" />
-    <SecProjPrList :projects="filtPr || projects" v-if="type == 'list'" />
-    <SecProjPrMap :projects="filtPr || projects" v-if="type == 'map'" />
-    <SecProjPrGrid :projects="filtPr || projects" @changeFilt='changeFilt' v-if="type == 'grid'" />
+    <SecProjPrList :projects="filtPr || projectsSSR" v-if="type === 'list'" />
+    <SecProjPrMap :projects="filtPr || projectsSSR" v-if="type === 'map'" />
+    <SecProjPrGrid :projects="filtPr || projectsSSR" @changeFilt="changeFilt" v-if="type === 'grid'" />
   </div>
 </template>
 
@@ -33,22 +32,37 @@
 import { useMain } from '~/store/main';
 
 const store = useMain();
-const { $i18n } = useNuxtApp();
 
-const locale = computed(() => $i18n.locale);
+const { locale } = useI18n()
 
-await store.getProjects();
-await store.getCCatPr();
-await store.getCYearPr();
-await store.getCCountryPr();
+const { data: pageInfo } = useAsyncData('projectsData', async () => {
+  try {
+    const [projects, categories, years, countries] = await Promise.all([
+      $fetch('/wp-json/wp/v2/projects?per_page=100'),
+      $fetch('/wp-json/wp/v2/cat?per_page=100'),
+      $fetch('/wp-json/wp/v2/year?per_page=100'),
+      $fetch('/wp-json/wp/v2/country?per_page=100')
+    ]);
 
-const projects = computed(() => store.projects);
-const cat = computed(() => store.CCatPr);
-const country = computed(() => store.CCountryPr);
-const year = computed(() => store.CYearPr);
+    return {
+      projects: projects?.filter(el => el.status === 'publish') ?? [],
+      categories: categories?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? [],
+      years: years?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? [],
+      countries: countries?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? []
+    };
+  } catch (error) {
+    console.error("Ошибка загрузки данных:", error);
+    return { projects: [], categories: [], years: [], countries: [] };
+  }
+});
+
+const projectsSSR = computed(() => pageInfo.value?.projects ?? []);
+const cat = computed(() => pageInfo.value?.categories ?? []);
+const country = computed(() => pageInfo.value?.countries ?? []);
+const year = computed(() => pageInfo.value?.years ?? []);
 
 const type = ref('grid');
-const filtPrCount = ref(projects.value.length);
+const filtPrCount = ref(projectsSSR.value.length);
 const filtCat = ref(null);
 const filtPr = ref(null);
 
@@ -68,7 +82,7 @@ const changeFilter = (filter) => {
 };
 
 const filtPl = () => {
-  let pr = projects.value;
+  let pr = [...projectsSSR.value];
   if (filtCat.value?.cat) {
     pr = pr.filter(el => el.cat.includes(filtCat.value.cat));
   }
@@ -93,7 +107,8 @@ const changeType = (newType) => {
   }
 };
 
-const seoTitle = computed(() => $i18n.t('proj.tit'));
+const { $i } = useNuxtApp()
+const seoTitle = computed(() => $i('proj.tit'));
 const canonicalUrl = computed(() => `https://kerimovarchitects.com${locale.value === 'en' ? '/en/projects' : '/projects'}`);
 
 useSeoMeta({

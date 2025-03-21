@@ -4,6 +4,13 @@ const backend = 'http://backend:80'
 export default defineNuxtConfig({
   ssr: true,
 
+  app: {
+    pageTransition: {
+      name: "page",
+      mode: "out-in",
+    },
+  },
+
   nitro: {
     routeRules: {
       '/wp-json/**': { proxy: `${backend}/wp-json/**` },
@@ -18,23 +25,15 @@ export default defineNuxtConfig({
     },
   },
 
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     "dropzone/dist/dropzone.css",
     "@splidejs/splide/dist/css/splide-core.min.css",
     "@/assets/css/main.css",
     "@/assets/css/style.scss",
-    "swiper/css/swiper.min.css"
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: "~/plugins/google-maps", ssr: true },
-    { src: "@/plugins/splide", mode: "client" },
-    { src: "@/plugins/router" },
-    { src: '~/plugins/vue-awesome-swiper', mode: "client", ssr: false },
-  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

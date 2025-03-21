@@ -813,23 +813,22 @@ textarea {
 
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.5s;
+  transition: opacity 0.5s ease-in-out, filter 0.5s ease-in-out;
   transform-origin: left;
-  filter: blur(0);
 }
 
-.page-enter,
-.page-leave-to {
-
+.page-enter-from {
   filter: blur(1rem);
   opacity: 0;
-  // transform: scaleX(0.7);
-  transform-origin: left;
+}
+
+.page-leave-to {
+  filter: blur(1rem);
+  opacity: 0;
 }
 
 .pop1-enter-active,
 .pop1-leave-active {
-
   transition: all 0.5s;
   transform-origin: left;
   filter: blur(0);
@@ -1248,4 +1247,33 @@ a.tag {
 .gm-fullscreen-control,
 .gm-style-mtc {
   display: none !important;
+}
+
+.ac-panel-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+  width: 100%;
+}
+
+.ac-panel-wrapper.open {
+  opacity: 1;
+}
+
+.ac-panel {
+  padding-top: 10px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.ac-trigger {
+  cursor: pointer;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
 }

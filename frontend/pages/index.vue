@@ -8,11 +8,11 @@
             <h1 class="h1">Kerimov Architects</h1>
           </div>
           <div class="main-projects__descr">
-            <span> {{ $t('main.tit1') }}</span>
+            <span> {{ $i('main.tit1') }}</span>
           </div>
           <div class="main-projects__link">
             <NuxtLink :to="localePath('/projects')" class=" btn p1 d-inline-block ">
-              {{ $t('main.btn.proj') }}
+              {{ $i('main.btn.proj') }}
             </NuxtLink>
           </div>
         </div>
@@ -33,7 +33,7 @@
           </div>
           <div class="main-projects__link">
             <NuxtLink :to="localePath(`/projects/${item.slug}`)" class="btn p1 d-inline-block">
-              {{ $t('main.btn.projD') }}
+              {{ $i('main.btn.projD') }}
             </NuxtLink>
           </div>
         </div>
@@ -41,10 +41,10 @@
       <div class="main-projects__miniature">
         <div class="main-projects__info">
           <h1 class="h1">Kerimov Architects</h1>
-          <span> {{ $t('main.tit1') }}</span>
+          <span> {{ $i('main.tit1') }}</span>
           <div class="main-projects__link">
             <NuxtLink :to="localePath('/about')" class=" btn btn_d p1 d-inline-block ">
-              {{ $t('main.btn.about') }}
+              {{ $i('main.btn.about') }}
             </NuxtLink>
           </div>
         </div>
@@ -58,9 +58,8 @@ import { useMain } from '~/store/main';
 
 const store = useMain();
 const localePath = useLocalePath();
-const { $i18n } = useNuxtApp();
 
-const locale = $i18n.locale;
+const { locale } = useI18n();
 
 await store.getPage();
 await store.getProjects();
@@ -119,7 +118,7 @@ useHead({
 
 <style scoped lang="scss">
 .main-projects {
-  margin-top: 0px;
+  margin-top: -48px;
   display: flex;
   flex-direction: column;
 

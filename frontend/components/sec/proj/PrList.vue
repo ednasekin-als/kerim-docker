@@ -4,7 +4,7 @@
             <CompPrListCard v-for="item in (projects)" :key="item.id" :project="item" />
         </div>
         <div class="pad-l-r">
-            <p v-if="projects && !projects.length" class="h2 m-b-60">{{ $t('notFound') }}</p>
+            <p v-if="projects && !projects.length" class="h2 m-b-60">{{ $i('notFound') }}</p>
         </div>
     </div>
 </template>

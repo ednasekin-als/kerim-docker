@@ -1,6 +1,6 @@
 <template>
     <div class="menuBg" @click="closeMenu()">
-        <h1 class="h1 menuBg__tit">{{ $t('menu.menu') }}</h1>
+        <h1 class="h1 menuBg__tit">{{ $i('menu.menu') }}</h1>
 
     </div>
 </template>

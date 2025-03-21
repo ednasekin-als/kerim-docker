@@ -77,7 +77,7 @@ export const useMain = defineStore("main", () => {
 
   const getCCatPr = async () => {
     try {
-      const data: any[] = await $fetch('wp-json/wp/v2/cat?per_page=100');
+      const data: any[] = await $fetch('/wp-json/wp/v2/cat?per_page=100');
       if (data) {
         const filteredCatPr = data
           .filter((el) => el.count) // Фильтрация

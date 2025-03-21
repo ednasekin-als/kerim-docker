@@ -12,21 +12,21 @@
     <div class="header__nav">
       <ul class="header__menu">
         <li>
-          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }" :to="localePath('/projects')">{{ $t('head.proj') }}</nuxt-link>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }" :to="localePath('/projects')">{{ $i('head.proj') }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }" :to="localePath('/about')">{{ $t('head.about') }}</nuxt-link>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }" :to="localePath('/about')">{{ $i('head.about') }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }" :to="localePath('/contacts')">{{ $t('head.cont') }}</nuxt-link>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }" :to="localePath('/contacts')">{{ $i('head.cont') }}</nuxt-link>
         </li>
       </ul>
     </div>
     <div class="header__switch">
-      <NuxtLink :to="switchLocalePath($i18n.locale == 'ru' ? 'en' : 'ru')" class="headLink p1 mp0">
-        <span :class="($i18n.locale == 'ru' ? 'active' : '')">Ru</span>
+      <NuxtLink :to="switchLocalePath(locale == 'ru' ? 'en' : 'ru')" class="headLink p1 mp0">
+        <span :class="(locale == 'ru' ? 'active' : '')">Ru</span>
         /
-        <span :class="($i18n.locale == 'en' ? 'active' : '')">En</span>
+        <span :class="(locale == 'en' ? 'active' : '')">En</span>
       </NuxtLink>
     </div>
     <Transition name="menu">
@@ -37,24 +37,24 @@
           </NuxtLink>
 
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()" :to="localePath('/projects')">
-            {{ $t('head.proj') }}
+            {{ $i('head.proj') }}
           </NuxtLink>
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()"  :to="localePath('/about')">
-            {{ $t('head.about') }}
+            {{ $i('head.about') }}
           </NuxtLink>
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()" :to="localePath('/contacts')">
-            {{ $t('head.cont') }}
+            {{ $i('head.cont') }}
           </NuxtLink>
 
           <div class="d-flex flex-column menu__item">
             <div class="" style="width: 100%;">
               <div class="line w-100 m-t-1r m-b-2r"></div>
             </div>
-            <NuxtLink @click.native="toggleMenu()" :to="switchLocalePath($i18n.locale == 'ru' ? 'en' : 'ru')"
+            <NuxtLink @click.native="toggleMenu()" :to="switchLocalePath(locale == 'ru' ? 'en' : 'ru')"
               class="h1m m-b-1r">
-              <span :class="($i18n.locale == 'ru' ? 'active' : '')">Ru</span>
+              <span :class="(locale == 'ru' ? 'active' : '')">Ru</span>
               /
-              <span :class="($i18n.locale == 'en' ? 'active' : '')">En</span>
+              <span :class="(locale == 'en' ? 'active' : '')">En</span>
             </NuxtLink>
           </div>
         </div>
@@ -67,7 +67,7 @@
 const menu = ref(false);
 
 const route = useRoute();
-const { $i18n } = useNuxtApp();
+const { locale } = useI18n();
 const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
 

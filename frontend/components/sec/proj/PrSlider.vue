@@ -5,7 +5,7 @@
         <div class="PrSlider__slide" :style="{ backgroundImage: `url(${project.r_img1})` }">
           <p class="h1">{{ project[$i18n.locale + '_tit'] }}</p>
           <NuxtLink :to="`/projects/${project.slug}`" class="p1 btn">
-            {{ $t('main.btn.projD') }}
+            {{ $i('main.btn.projD') }}
           </NuxtLink>
         </div>
       </div>

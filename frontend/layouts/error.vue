@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-24">
                 <NuxtLink class="h1" to="/">404</NuxtLink>
-                <p class="h2">{{ $t('error.descr') }}</p>
+                <p class="h2">{{ $i('error.descr') }}</p>
             </div>
         </div>
     </div>

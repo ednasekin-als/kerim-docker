@@ -16,10 +16,9 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useMain } from '~/store/main';
 
 const store = useMain();
-const { $i18n } = useNuxtApp();
 const localePath = useLocalePath();
 
-const locale = computed(() => $i18n.locale);
+const { locale } = useI18n();
 
 const props = defineProps({
   project: {
@@ -75,7 +74,7 @@ onBeforeUnmount(() => {
     position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     transition: 2s ease-in-out;
 
     &:last-of-type {

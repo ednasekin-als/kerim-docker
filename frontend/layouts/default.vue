@@ -1,5 +1,6 @@
 <template>
   <div>
+      <NuxtLoadingIndicator color="#000" />
       <SecTheHeader />
       <div class="wrap__r">
         <slot />
@@ -83,6 +84,9 @@
     flex: auto;
 }
 
+.wrap__r {
+  margin-top: 48px;
+}
 
 // .wrap__r {
 //     position: fixed;

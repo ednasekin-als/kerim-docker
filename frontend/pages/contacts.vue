@@ -3,7 +3,7 @@
     <div class="contH">
       <div class="row">
         <div class='col-xl- offset-xl- col-lg- offset-lg- offset-md- col-24 offset- '>
-          <h1 class="h1">{{ $t('cont.tit') }}</h1>
+          <h1 class="h1">{{ $i('cont.tit') }}</h1>
         </div>
       </div>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md- offset-md- col-18 offset-6 '>
@@ -48,7 +48,7 @@
 
       <div v-if="page[locale + '_soc'].length" class="row contH__links">
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-5 offset-md-6 col-8 offset- '>
-          <p class="p1 op-05 mp0">{{ $t('cont.soc') }}</p>
+          <p class="p1 op-05 mp0">{{ $i('cont.soc') }}</p>
         </div>
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-10 offset-md-1 col-15 offset-1 socW'>
           <a v-for="item in page[locale + '_soc']" :href="item.link" class="p1 mp0 socBtn">
@@ -65,9 +65,8 @@
 import { useMain } from '~/store/main';
 
 const store = useMain();
-const { $i18n } = useNuxtApp();
 
-const locale = $i18n.locale;
+const { locale } = useI18n();
 
 await store.getPage();
 
@@ -141,6 +140,7 @@ useHead({
 
 .contH {
   margin-bottom: auto;
+  height: calc(100vh - 158px);
 
   a {
     color: #9c9c9c;

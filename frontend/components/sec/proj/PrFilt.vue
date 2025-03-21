@@ -11,7 +11,7 @@
             <client-only>
                 <div class="wrapFilt">
                     <v-select :filterable="false" :searchable="false" :options="country" :label="$i18n.locale + '_tit'"
-                        :placeholder="$t('proj.btn.country')" v-model="localCountry" @input="changeFilter">
+                        :placeholder="$i('proj.btn.country')" v-model="localCountry" @input="changeFilter">
 
                         <template #open-indicator="{ attributes }">
                             <span class="arrow">
