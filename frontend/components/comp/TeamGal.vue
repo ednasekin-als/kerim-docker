@@ -1,103 +1,85 @@
 <template>
   <div>
-    <div v-swiper:mySwiper="swiperOption" class="AbTeam">
-      <p class="h2 mp0 btnUL">{{ $t('about.tit') }}</p>
-      <div class="swiper-wrapper">
-        <div v-for="(item, key) in teamData" :key="key" class="swiper-slide">
+    <section class="AbTeam">
+      <p class="h2 mp0 btnUL">{{ $i('about.tit') }}</p>
+
+      <swiper :modules="modules" :slides-per-view="1" :space-between="30" :mousewheel="swiperOptions.mousewheel"
+        :pagination="swiperOptions.pagination" :breakpoints="{
+          1025: { slidesPerView: 4.1, spaceBetween: 20 },
+          769: { slidesPerView: 3.1, spaceBetween: 10 },
+          415: { slidesPerView: 2, spaceBetween: 10 }
+        }" class="mySwiper">
+
+        <swiper-slide v-for="(item, key) in teamData" :key="key">
           <div class="AbTeam__card">
             <button v-if="item.list.length" @click="openPopT(item)" class="teamCard">
               <div class="AbTeam__img">
-                <img :src="item.img" alt="">
+                <img :src="item.img" alt="" />
               </div>
-              <p class="p1 mp0 mp0 -b-05r">{{ item.name }}</p>
+              <p class="p1 mp0 -b-05r">{{ item.name }}</p>
               <p class="p1 mp0 op-05">{{ item.pos }}</p>
             </button>
           </div>
-        </div>
-      </div>
+        </swiper-slide>
+      </swiper>
+
       <div class="swiper-pagination"></div>
-    </div>
+    </section>
+
     <transition name="pop1">
       <CompPopTeam v-if="popT" :team="popT" @closePopT="closePopT()" />
     </transition>
   </div>
 </template>
-<script>
 
-export default {
-  name: 'componentSwiper',
-  props: {
-    teamData: {
-      type: Array,
-      required: true
+<script setup>
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Mousewheel } from 'swiper/modules';
+import 'swiper/swiper-bundle.css'
+
+const popT = ref(null);
+
+defineProps({
+  teamData: {
+    type: Array,
+    required: true
+  }
+});
+
+const openPopT = (item) => {
+  popT.value = item;
+};
+
+const closePopT = () => {
+  popT.value = null;
+};
+
+const modules = ref([Pagination, Mousewheel]);
+const swiperOptions = ref({
+  slidesPerView: 1,
+  spaceBetween: 30,
+  mousewheel: {
+    forceToAxis: true
+  },
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true,
+    renderFraction: (currentClass, totalClass) => {
+      return `<span class="${currentClass}"></span> <small>/ <span class="${totalClass}"></span></small>`;
     }
-  },
-  data() {
-    return {
-      popT: null,
-      swiperOption: {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        allowTouchMove: true,
-        clickable: true,
-        init: true,
-        mousewheel: {
-          forceToAxis: true,
-        },
-        bulletClass: 'swiper-pagination-bullet',
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-          renderFraction: function (currentClass, totalClass) {
-            return '<span class="' + currentClass + '"></span>' + ' <small>/ ' + '<span class="' + totalClass + '"></span></small>';
-          }
-        },
-        breakpoints: {
-          1024.98: {
-            slidesPerView: 4.1,
-            spaceBetween: 20
-          },
-          768.98: {
-            slidesPerView: 3.1,
-            spaceBetween: 10
-          },
-          414.98: {
-            slidesPerView: 2,
-            spaceBetween: 10
-          },
-        }
-      }
-    }
-  },
-  methods: {
-    openPopT(item) {
-      this.popT = item
-      console.log();
-    },
-    closePopT() {
-      this.popT = null
-    }
-  },
-  mounted() {
-    this.mySwiper.destroy = () => { };
-  },
-  computed: {
-    locale() {
-      return this.$i18n.locale;
-    },
-  },
-}
+  }
+});
 </script>
 
 <style scoped>
 .AbTeam {
   padding: var(--main-pad);
+  position: relative;
 }
 
 .AbTeam .h2 {
   margin-bottom: 0.5rem;
 }
-
 
 @media (max-width: 767.98px) {
   .AbTeam .h2 {
@@ -123,8 +105,7 @@ export default {
   width: 100%;
   height: auto;
   object-fit: cover;
-  transition: all .65s ease-in-out;
-
+  transition: all 0.65s ease-in-out;
 }
 
 @media (min-width: 2200.98px) {
@@ -141,7 +122,6 @@ export default {
 }
 
 @media (max-width: 767.98px) {
-
   .AbTeam__img img {
     height: 15rem;
   }
@@ -152,7 +132,6 @@ export default {
 }
 
 @media (max-width: 414.98px) {
-
   .AbTeam__img img {
     height: auto;
   }

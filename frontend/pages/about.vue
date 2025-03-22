@@ -1,6 +1,5 @@
 <template>
   <div class="">
-
     <div class="AbPad AbFirst">
       <div class="row">
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md- col-20 offset- '>
@@ -18,7 +17,9 @@
         <p class="p1 postContent" v-html="page[locale + '_val3']"></p>
       </div>
     </div>
-    <CompTeamGal :teamData="page[locale + '_team']" />
+    <ClientOnly>
+      <CompTeamGal :teamData="page[locale + '_team']" />
+    </ClientOnly>
     <div v-for="(itemL, key) in page[locale + '_inf']" class="AbPad">
       <p class="h2 mp0 btnUL">
         {{ itemL.name }}
@@ -45,14 +46,14 @@
         <div v-if="!(key % 2)"
           class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 position-static'>
           <a v-if="item.link" class="awwI__link p1 mp0 abLink" target="_blank" :href="item.link">{{ item.name
-            }}</a>
+          }}</a>
           <p v-else class="awwI__link p1 mp0">{{ item.name }}</p>
           <img v-if="item.img" class="awwI__img d-none d-lg-block" :src="item.img" alt="">
         </div>
         <div v-else
           class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 position-static'>
           <a v-if="item.link" class="awwI__link p1 mp0 abLink" target="_blank" :href="item.link">{{ item.name
-            }}</a>
+          }}</a>
           <p v-else class="awwI__link p1 mp0">{{ item.name }}</p>
           <img v-if="item.img" class="awwI__img d-none d-lg-block" :src="item.img" alt="">
         </div>
@@ -63,7 +64,7 @@
         <div class="line op-05 m-b-1r"></div>
         <button @click="awwLCount = awwLCount + 10" class="p1 btnVM ">
           <span class="btnVM__txt">
-            {{ $t('menu.more') }}
+            {{ $i('menu.more') }}
           </span>
           <span class="material-symbols-outlined">
             <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -121,7 +122,7 @@
         <div class="line op-05 m-b-1r"></div>
         <button @click="pubLCount = pubLCount + 10" class="p1 btnVM ">
           <span class="btnVM__txt">
-            {{ $t('menu.more') }}
+            {{ $i('menu.more') }}
           </span>
           <span class="material-symbols-outlined">
             <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -139,65 +140,8 @@
     </div>
 
 
-
-    <!-- <div v-if="page[locale + '_pub-print'].length" class="AbPad">
-            <div class="AbPad__title">
-                <p class="h2" id="publication">
-                    {{ page[locale + '_pub-print_title'] }}
-                </p>
-                <sup>
-                    {{ page[locale + '_pub-print'].length }}
-                </sup>
-            </div>
-            <div v-for="(item, key) in page[locale + '_pub-print']" :key="key" class="row">
-                <div v-if="!(key % 2)"
-                    class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 '>
-                    <button v-if="item.list.length" @click="openPopT(item)">
-                        <p class="p1 mp0">{{ item.name }}</p>
-                    </button>
-                </div>
-                <div v-else class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 '>
-                    <button v-if="item.list.length" @click="openPopT(item)">
-                        <p class="p1 mp0">{{ item.name }}</p>
-                    </button>
-                </div>
-                <div class="col-24 col-md-18 offset-md-6">
-                    <div class="line m-t-1r m-b-1r op-05"></div>
-                </div>
-            </div>
-            <div v-if="pubLCount < page[locale + '_pub-print'].length"
-                class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 m-t-1r m-b-1r'>
-                <div class="line op-05 m-b-1r"></div>
-                <button @click="pubLCount = pubLCount + 10" class="p1 btnVM ">
-                    <span class="btnVM__txt">
-                        {{ $t('menu.more') }}
-                    </span>
-                    <span class="material-symbols-outlined">
-                        <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <g id="_24x24_On_Light_Arrow-Bottom" data-name="24x24/On Light/Arrow-Bottom"
-                                transform="translate(0 24) rotate(-90)">
-                                <rect id="view-box" width="24" height="24" fill="none" />
-                                <path id="Shape"
-                                    d="M.22,10.22A.75.75,0,0,0,1.28,11.28l5-5a.75.75,0,0,0,0-1.061l-5-5A.75.75,0,0,0,.22,1.28l4.47,4.47Z"
-                                    transform="translate(14.75 17.75) rotate(180)" fill="#141124" />
-                            </g>
-                        </svg>
-                    </span>
-                </button>
-            </div>
-        </div> -->
-
-
-
-
     <button @click="toggler = !toggler" v-if="page[locale + '_img_big2_vid'] && page[locale + '_img_big2']"
       class="openVid">
-      <!-- <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M118 60C118 92.0325 92.0325 118 60 118C27.9675 118 2 92.0325 2 60C2 27.9675 27.9675 2 60 2C92.0325 2 118 27.9675 118 60ZM120 60C120 93.1371 93.1371 120 60 120C26.8629 120 0 93.1371 0 60C0 26.8629 26.8629 0 60 0C93.1371 0 120 26.8629 120 60ZM83 58.8453L85 60L83 61.1547L49.5 80.4959L47.5 81.6506V79.3412L47.5 40.6588V38.3494L49.5 39.5041L83 58.8453ZM49.5 41.8135L81 60L49.5 78.1865V41.8135Z"
-                    fill="white" />
-
-            </svg> -->
       <div class="wrapSvg">
         <svg xmlns="http://www.w3.org/2000/svg" fill="white" height="48" viewBox="0 -960 960 960" width="48">
           <path d="M372-295v-372l292 186-292 186Zm22-186Zm0 145 230-145-230-145v290Z" />
@@ -243,7 +187,7 @@
         <div class="line op-05 m-b-1r"></div>
         <button @click="eveLCount = eveLCount + 10" class="p1 btnVM ">
           <span class="btnVM__txt">
-            {{ $t('menu.more') }}
+            {{ $i('menu.more') }}
           </span>
           <span class="material-symbols-outlined">
             <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -262,30 +206,30 @@
 
     <div v-if="page[locale + '_vac_list'].length" class="AbPad">
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md- col-20 offset- m-t-2r'>
-        <p id="vacancy" class="h2 mp0 btnUL">{{ $t('vac') }}</p>
+        <p id="vacancy" class="h2 mp0 btnUL">{{ $i('vac') }}</p>
       </div>
       <p class="p1 op-05 mp0" v-html="page[locale + '_vac_tit']"></p>
       <div class="accordion-container accI">
-        <div v-for="(item, key) in page[locale + '_vac_list']" class="row ac m-b-2r">
-          <div class='vacancy__field col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0'>
-            <div class='ac-trigger h2 m-b-05r ac-trigger d-flex align-items-center'>
-              <p class="h2 mp0 btnUL">
-                {{ item.name }}
-              </p>
-              <span class="arrow">
+        <div v-for="(item, key) in page[locale + '_vac_list']" :key="key" class="row ac m-b-2r">
+          <div class="vacancy__field col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0">
+            <div class="ac-trigger h2 m-b-05r d-flex align-items-center" @click="toggleAccordion(key)">
+              <p class="h2 mp0 btnUL">{{ item.name }}</p>
+              <span class="arrow" :class="{ open: openAccordions.includes(key) }">
                 <span></span><span></span>
               </span>
             </div>
-            <p class="p1 mp0" v-html="item.val"></p>
+            <p class="p1 mp0">{{ item.val }}</p>
           </div>
-          <div class="ac-panel">
-            <div class="w-100">
-              <div v-for="(itemL, key) in item.list">
-                <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 '>
-                  <p class="p1 mp0 btnUL">{{ itemL.name }}</p>
-                </div>
-                <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-20 offset-4 '>
-                  <div class="p1 postContent p-t-1r" v-html="itemL.val"></div>
+          <div class="ac-panel-wrapper" ref="accordionPanels" :class="{ open: openAccordions.includes(key) }" :style="getPanelStyle(key)">
+            <div class="ac-panel">
+              <div class="w-100">
+                <div v-for="(itemL, index) in item.list" :key="index">
+                  <div class="col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0">
+                    <p class="p1 mp0 btnUL">{{ itemL.name }}</p>
+                  </div>
+                  <div class="col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-20 offset-4">
+                    <div class="p1 postContent p-t-1r" v-html="itemL.val"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -309,101 +253,76 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
 import FsLightbox from "fslightbox-vue";
-import Accordion from '@/assets/js/accordion.client.js';
+import { useMain } from '~/store/main';
 
-export default {
-    name: 'about',
-    components: { FsLightbox },
+const store = useMain();
+const { locale } = useI18n()
 
-    head() {
-      const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
-      return {
-        title: this.page[this.locale + '_seo_tit'],
-        htmlAttrs: {
-          ...i18nHead.htmlAttrs
-        },
-        meta: [
-          {
-            hid: 'description',
-            name: 'description',
-            content: this.page[this.locale + '_seo_des'],
-          },
-          { rel: "canonical", href: "https://kerimovarchitects.com" + (this.locale == "en" ? "/en" : '') + "/about" },
-          { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/about" },
-          {
-            rel: "alternate",
-            hreflang: "en-US",
-            href: "https://kerimovarchitects.com/en/about",
-          },
-        ],
-      }
-    },
-    data: () => ({
-      toggler: false,
-      accList: [],
-      awwLCount: 10,
-      pubLCount: 10,
-      eveLCount: 10,
-      optSl: {
-        // type: 'loop',
-        padding: '5rem',
-        // rewind: true,
-        perPage: 2,
-        gap: '5rem',
-        arrows: true,
-        // autoplay: true,
-        breakpoints: {
-          1024: {
-            perPage: 2,
-          },
-          767: {
-            perPage: 1,
-          },
-        },
-      },
-      popT: null
-    }),
-    methods: {
-      openPopT(item) {
-        this.popT = item
-      },
-      closePopT() {
-        this.popT = null
-      }
-    },
+const toggler = ref(false);
+const awwLCount = ref(10);
+const pubLCount = ref(10);
+const eveLCount = ref(10);
+const popT = ref(null);
+const openAccordions = ref([]);
+const accordionPanels = ref([]);
 
-    async fetch({ store }) {
-      await store.dispatch('getPage');
-    },
+await store.getPage();
 
-    computed: {
-      ...mapState({
-        pages: 'pages',
-      }),
+const getPanelStyle = (index) => {
+  const panel = accordionPanels.value[index];
+  if (!panel) return {};
 
-      locale() {
-        return this.$i18n.locale;
-      },
-      page() {
-        return this.pages.find((el) => el.id === 24)
-      },
-    },
+  return openAccordions.value.includes(index)
+    ? { maxHeight: panel.scrollHeight + 'px', opacity: 1 }
+    : { maxHeight: '0', opacity: 0 };
+};
 
-    mounted() {
-      window.scrollTo(0, 0);
-      this.$nextTick(() => {
-        document.querySelectorAll('.accI').forEach((el, key) => {
-          this.accList[key] = new Accordion(el, {
-            showMultiple: true,
-          });
-        })
-      })
-    },
+const toggleAccordion = (index) => {
+  if (openAccordions.value.includes(index)) {
+    openAccordions.value = openAccordions.value.filter((i) => i !== index);
+  } else {
+    openAccordions.value.push(index);
   }
+};
 
+const page = computed(() => store.pages.find(el => el.id === 24));
+const { data: pageInfo } = useAsyncData('pages',
+  async () => {
+    const [pages] = await Promise.all([
+      $fetch('/wp-json/wp/v2/pages?per_page=100'),
+    ]);
+
+    return {
+      pages,
+    };
+  },
+  {
+    lazy: false,
+  }
+);
+
+const pageSSR = computed(() => pageInfo.value?.pages.find(el => el.id === 24));
+const seoTitle = computed(() => pageSSR.value?.[locale.value + "_seo_tit"]);
+const seoDescription = computed(() => pageSSR.value?.[locale.value + "_seo_des"]);
+const canonicalUrl = computed(() => `https://kerimovarchitects.com${locale.value === "en" ? "/en" : ""}/about`);
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/about" },
+    { rel: "alternate", hreflang: "en-US", href: "https://kerimovarchitects.com/en/about" },
+  ],
+});
 </script>
 
 <style lang="scss" scoped>
@@ -465,7 +384,11 @@ export default {
     border-bottom: 1px solid #828282;
 
     p {
-      margin-bottom: 0 !important;
+      margin-bottom: 0;
+    }
+
+    .p1 {
+      margin-bottom: 1rem;
     }
 
     svg {

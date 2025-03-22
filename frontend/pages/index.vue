@@ -2,38 +2,38 @@
   <div class="main-projects">
     <div class="main-projects__content">
       <div class="main-projects__intro">
-        <img v-if="page[$i18n.locale + '_m_img']" :src="page[$i18n.locale + '_m_img']" alt="">
+        <img v-if="page[locale + '_m_img']" :src="page[locale + '_m_img']" alt="">
         <div class="main-projects__info">
           <div class="main-projects__title">
             <h1 class="h1">Kerimov Architects</h1>
           </div>
           <div class="main-projects__descr">
-            <span> {{ $t('main.tit1') }}</span>
+            <span> {{ $i('main.tit1') }}</span>
           </div>
           <div class="main-projects__link">
             <NuxtLink :to="localePath('/projects')" class=" btn p1 d-inline-block ">
-              {{ $t('main.btn.proj') }}
+              {{ $i('main.btn.proj') }}
             </NuxtLink>
           </div>
         </div>
       </div>
       <div class="main-projects__intro" v-for="(item, key) in filteredProjects">
-        <img :src="item.r_img1 || item[$i18n.locale + '_img1']" alt="">
+        <img :src="item.r_img1 || item[locale + '_img1']" alt="">
         <div class="main-projects__info">
           <div class="main-projects__title">
-            <h1 class="h1">{{ item[$i18n.locale + '_tit'] }}</h1>
+            <h1 class="h1">{{ item[locale + '_tit'] }}</h1>
             <span class="h1 ttu" style="padding-left: 1em;">
               {{ ((key + 1) > 9) ? (key + 1) : '0' + (key + 1) }}
             </span>
           </div>
           <div class="tagList">
             <span class="tag p1">
-              {{cat?.find(el => el.id == item.cat[0])[$i18n.locale + '_tit']}}
+              {{ cat?.find(el => el.id == item.cat?.[0])?.[locale + '_tit'] }}
             </span>
           </div>
           <div class="main-projects__link">
             <NuxtLink :to="localePath(`/projects/${item.slug}`)" class="btn p1 d-inline-block">
-              {{ $t('main.btn.projD') }}
+              {{ $i('main.btn.projD') }}
             </NuxtLink>
           </div>
         </div>
@@ -41,10 +41,10 @@
       <div class="main-projects__miniature">
         <div class="main-projects__info">
           <h1 class="h1">Kerimov Architects</h1>
-          <span> {{ $t('main.tit1') }}</span>
+          <span> {{ $i('main.tit1') }}</span>
           <div class="main-projects__link">
             <NuxtLink :to="localePath('/about')" class=" btn btn_d p1 d-inline-block ">
-              {{ $t('main.btn.about') }}
+              {{ $i('main.btn.about') }}
             </NuxtLink>
           </div>
         </div>
@@ -53,68 +53,72 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { useMain } from '~/store/main';
 
-export default {
-  name: 'index',
+const store = useMain();
+const localePath = useLocalePath();
 
-  async fetch({ store }) {
-    await store.dispatch('getPage');
-    await store.dispatch('getProjects');
-    await store.dispatch('getCCatPr');
-  },
+const { locale } = useI18n();
 
-  head() {
-    const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
+await store.getPage();
+await store.getProjects();
+await store.getCCatPr();
+
+const filteredProjects = computed(() => store.projects.slice(0, 4));
+const page = computed(() => store.pages.find(el => el.id === 21));
+const cat = computed(() => store.CCatPr);
+
+const { data: pageInfo } = useAsyncData('pages',
+  async () => {
+    const [pages] = await Promise.all([
+      $fetch('/wp-json/wp/v2/pages?per_page=100'),
+    ]);
+
     return {
-      title: this.page[this.$i18n.locale + '_seo_tit'],
-      htmlAttrs: {
-        ...i18nHead.htmlAttrs
-      },
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page[this.$i18n.locale + '_seo_des'],
-        },
-        { rel: "canonical", href: "https://kerimovarchitects.com" + (this.$i18n.locale == "en" ? "/en" : '') },
-        { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com" },
-        {
-          rel: "alternate",
-          hreflang: "en-US",
-          href: "https://kerimovarchitects.com/en",
-        },
-      ],
-    }
+      pages,
+    };
   },
+  {
+    lazy: false,
+  }
+);
 
-  computed: {
-    ...mapState({
-      pages: 'pages',
-      cat: 'CCatPr',
-      projects: 'projects'
-    }),
+const pageSSR = computed(() => pageInfo.value?.pages.find(el => el.id === 21));
+const seoTitle = computed(() => {
+  const key = locale.value + "_seo_tit";
+  return pageSSR.value?.[key];
+});
 
-    page() {
-      return this.pages.find((el) => el.id === 21)
-    },
+const seoDescription = computed(() => {
+  const key = locale.value + "_seo_des";
+  return pageSSR.value?.[key];
+});
 
-    filteredProjects() {
-      return this.projects.slice(0, 4);
-    },
-  },
+const canonicalUrl = computed(() => {
+  return "https://kerimovarchitects.com" + (locale.value === "en" ? "/en" : "");
+});
 
-  mounted() {
-    window.scrollTo(0, 0);
-  },
-}
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com" },
+    { rel: "alternate", hreflang: "en-US", href: "https://kerimovarchitects.com/en" },
+  ]
+});
 </script>
-
 
 <style scoped lang="scss">
 .main-projects {
-  margin-top: 0px;
+  margin-top: -48px;
   display: flex;
   flex-direction: column;
 

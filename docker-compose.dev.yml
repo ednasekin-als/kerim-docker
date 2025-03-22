@@ -49,6 +49,7 @@ services:
       - "${FRONTEND_PORT}:3000"
     volumes:
       - ./frontend:/app:rw
+      - /app/node_modules
     networks:
       - app_network
 

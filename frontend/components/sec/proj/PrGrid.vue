@@ -4,12 +4,12 @@
             <CompPrGridCard v-for="item in (projects)" :key="item.id" :project="item" />
         </div>
         <div class="pad-l-r">
-            <p v-if="projects && !projects.length" class="h2 m-b-60">{{ $t('notFound') }}</p>
+            <p v-if="projects && !projects.length" class="h2 m-b-60">{{ $i('notFound') }}</p>
         </div>
     </div>
 </template>
 <script>
-export default ({
+export default {
     name: 'PrGrid',
     props: {
         projects: {
@@ -17,7 +17,7 @@ export default ({
             required: true
         },
     },
-})
+}
 </script>
 <style lang="scss" scoped>
 .PrGrid {}

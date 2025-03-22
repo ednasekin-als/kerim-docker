@@ -3,7 +3,7 @@
     <div class="contH">
       <div class="row">
         <div class='col-xl- offset-xl- col-lg- offset-lg- offset-md- col-24 offset- '>
-          <h1 class="h1">{{ $t('cont.tit') }}</h1>
+          <h1 class="h1">{{ $i('cont.tit') }}</h1>
         </div>
       </div>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md- offset-md- col-18 offset-6 '>
@@ -48,7 +48,7 @@
 
       <div v-if="page[locale + '_soc'].length" class="row contH__links">
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-5 offset-md-6 col-8 offset- '>
-          <p class="p1 op-05 mp0">{{ $t('cont.soc') }}</p>
+          <p class="p1 op-05 mp0">{{ $i('cont.soc') }}</p>
         </div>
         <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-10 offset-md-1 col-15 offset-1 socW'>
           <a v-for="item in page[locale + '_soc']" :href="item.link" class="p1 mp0 socBtn">
@@ -61,51 +61,62 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { useMain } from '~/store/main';
 
-export default {
-  head() {
-    const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
+const store = useMain();
+
+const { locale } = useI18n();
+
+await store.getPage();
+
+const page = computed(() => store.pages.find(el => el.id === 27));
+
+const { data: pageInfo } = useAsyncData('pages',
+  async () => {
+    const [pages] = await Promise.all([
+      $fetch('/wp-json/wp/v2/pages?per_page=100'),
+    ]);
+
     return {
-      title: this.page[this.$i18n.locale + '_seo_tit'],
-      htmlAttrs: {
-        ...i18nHead.htmlAttrs
-      },
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page[this.$i18n.locale + '_seo_des'],
-        },
-        { rel: "canonical", href: "https://kerimovarchitects.com" + (this.$i18n.locale == "en" ? "/en" : '') + "/contacts" },
-        { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/contacts" },
-        {
-          rel: "alternate",
-          hreflang: "en-US",
-          href: "https://kerimovarchitects.com/en/contacts",
-        },
-      ],
-    }
+      pages,
+    };
   },
-
-  async fetch({ store }) {
-    await store.dispatch('getPage');
-  },
-
-  computed: {
-    ...mapState({
-      pages: 'pages',
-    }),
-
-    locale() {
-      return this.$i18n.locale;
-    },
-    page() {
-      return this.pages.find((el) => el.id === 27)
-    },
+  {
+    lazy: false,
   }
-};
+);
+
+const pageSSR = computed(() => pageInfo.value?.pages.find(el => el.id === 27));
+const seoTitle = computed(() => {
+  const key = locale.value + "_seo_tit";
+  return pageSSR.value?.[key];
+});
+
+const seoDescription = computed(() => {
+  const key = locale.value + "_seo_des";
+  return pageSSR.value?.[key];
+});
+
+const canonicalUrl = computed(() => {
+  return "https://kerimovarchitects.com" + (locale.value === "en" ? "/en/contacts" : "/contacts");
+});
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/contacts" },
+    { rel: "alternate", hreflang: "en-US", href: "https://kerimovarchitects.com/en/contacts" },
+  ]
+});
 </script>
 
 <style lang="scss" scoped>
@@ -129,6 +140,7 @@ export default {
 
 .contH {
   margin-bottom: auto;
+  height: calc(100vh - 158px);
 
   a {
     color: #9c9c9c;

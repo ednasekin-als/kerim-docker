@@ -38,7 +38,7 @@
     </div>
 </template>
 <script>
-export default ({
+export default {
     name: 'PopTeam',
     props: {
         team: {
@@ -53,11 +53,10 @@ export default ({
     mounted() {
         document.body.classList.add('overflow-hidden')
     },
-    beforeDestroy() {
+    beforeUnmount() {
         document.body.classList.remove('overflow-hidden')
     },
-
-})
+};
 </script>
 <style lang="scss" scoped>
 .PopTeam {

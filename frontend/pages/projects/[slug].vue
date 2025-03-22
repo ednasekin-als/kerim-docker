@@ -3,18 +3,18 @@
     <div class="PrDet__head">
       <div class="row">
         <div class='col-12'>
-          <h1 class="h1 tt">{{ post[$i18n.locale + '_tit'] }}</h1>
+          <h1 class="h1 tt">{{ post[locale + '_tit'] }}</h1>
         </div>
         <div class='col-12'>
           <span class="h1 number-project">{{ ((postIndex + 1) > 9) ? (postIndex + 1) : '0' + (postIndex + 1)
-            }}</span>
+          }}</span>
         </div>
       </div>
       <p class="h2">
-        {{ post[$i18n.locale + '_tit1'] }}
+        {{ post[locale + '_tit1'] }}
       </p>
       <div class=''>
-        <div v-for="item in post[$i18n.locale + '_list']">
+        <div v-for="item in post[locale + '_list']">
           <div class="row align-items-baseline">
             <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-5 offset-md-6 col-12 offset- '>
               <p class="p1 op-05 mp0">{{ item.name }}</p>
@@ -28,30 +28,34 @@
           </div>
         </div>
       </div>
-      <div v-if="post[$i18n.locale + '_img_l']" class="PrDet__aww row align-items-center offset-6">
+      <div v-if="post[locale + '_img_l']" class="PrDet__aww row align-items-center offset-6">
         <div class="col-lg-2 col-4 achievements">
-          <img :src="post[$i18n.locale + '_img_l']" alt="">
+          <img :src="post[locale + '_img_l']" alt="">
         </div>
         <div class="col-lg-21 offset-lg-1 col-19 offset-1">
           <p class="h2">
-            {{ post[$i18n.locale + '_tit2'] }}
+            {{ post[locale + '_tit2'] }}
           </p>
         </div>
       </div>
       <p v-else class="h2">
-        {{ post[$i18n.locale + '_tit2'] }}
+        {{ post[locale + '_tit2'] }}
       </p>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md- offset-md- col-18 offset-6 PrDet__text'>
-        <p class="p1 postContent" v-html="post[$i18n.locale + '_val1']"></p>
+        <p v-for="(text, index) in $html(post[locale + '_val1'])" :key="index" class="p1 postContent">
+          {{ text }}
+        </p>
       </div>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-24 offset- '>
-        <p class="p1 postContent" v-html="post[$i18n.locale + '_val2']"></p>
+        <p v-for="(text, index) in $html(post[locale + '_val2'])" :key="index" class="p1 postContent">
+          {{ text }}
+        </p>
       </div>
 
     </div>
     <div class="PrDet__gal">
       <div v-for="(item, key) in post['gal']" :key="key" class="PrDet__img" :style="`${(item.width)}`">
-        <span class="p1 pad-l-r m-b-05r d-block" v-html="item[$i18n.locale + '_name']"></span>
+        <span class="p1 pad-l-r m-b-05r d-block" v-html="item[locale + '_name']"></span>
         <div class="PrDet__imgW position-relative">
           <div v-if="item.vid" class="PrDet__svgW">
             <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,203 +73,144 @@
       <div v-for="(item, key) in post['gal_m']" class="PrDet__img">
         <img @click="clickImg(post['gal'].length + key || key)" :src="item" loading="lazy" alt="" class="">
       </div>
-
-    </div>
-    <div class="PrSlider">
-      <SecProjPrSlider :projects="filteredProjects" />
     </div>
     <ClientOnly>
-      <transition name="pop1">
-        <div v-if="toggler" class="modal" @click="closeModal">
-          <div class="modal-content" @click.stop>
-            <!-- Slider -->
-            <div v-swiper="swiperOption" class="PrDet__slider">
-              <div class="swiper-wrapper">
-                <div v-for="(item, key) in allGal" :key="key" class="swiper-slide">
-                  <template v-if="item && isYouTubeVideo(item)">
-                    <div class="PrDet__slide">
-                      <iframe width="90%" height="400" :src="embedYouTubeURL(item)" frameborder="0"
-                        allowfullscreen></iframe>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <div class="PrDet__slide">
-                      <img :src="item" alt="">
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-              <div class="swiper-pagination"></div>
-              <button class="PrDet__close" @click="closeModal">
-                <svg width="800px" height="800px" viewBox="0 0 24 24" id="_24x24_On_Light_Cross"
-                  data-name="24x24/On Light/Cross" xmlns="http://www.w3.org/2000/svg">
-                  <rect id="view-box" width="24" height="24" fill="none" />
-                  <path id="Shape"
-                    d="M9.291,10.352l-4-4-4.005,4A.75.75,0,1,1,.22,9.291l4.005-4L.22,1.281A.75.75,0,0,1,1.281.22L5.286,4.225l4-4.005a.75.75,0,1,1,1.061,1.061l-4,4.005,4,4a.75.75,0,0,1-1.061,1.061Z"
-                    transform="translate(6.629 6.8)" fill="#141124" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </transition>
+        <SecProjPrSlider :projects="filteredProjects" />
     </ClientOnly>
+    <transition name="pop1">
+      <div v-if="toggler" class="modal" @click="closeModal">
+        <div class="modal-content" @click.stop>
+          <swiper
+            :key="slideIndex"
+            :initial-slide="slideIndex"
+            :modules="modules"
+            :slides-per-view="1"
+            :allow-touch-move="true"
+            :keyboard="{ enabled: true }"
+            :mousewheel="{ forceToAxis: true }"
+            :pagination="{ el: '.swiper-pagination', clickable: true, renderFraction }"
+            :navigation="{ nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }" class="PrDet__slider">
+            <swiper-slide v-for="(item, key) in allGal" :key="key">
+              <template v-if="item && isYouTubeVideo(item)">
+                <div class="PrDet__slide">
+                  <iframe width="90%" height="400" :src="embedYouTubeURL(item)" frameborder="0"
+                    allowfullscreen></iframe>
+                </div>
+              </template>
+              <template v-else>
+                <div class="PrDet__slide">
+                  <img :src="item" alt="" />
+                </div>
+              </template>
+            </swiper-slide>
+          </swiper>
 
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-pagination"></div>
+
+          <button class="PrDet__close" @click="closeModal">
+            <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" fill="none" />
+              <path
+                d="M9.291,10.352l-4-4-4.005,4A.75.75,0,1,1,.22,9.291l4.005-4L.22,1.281A.75.75,0,0,1,1.281.22L5.286,4.225l4-4.005a.75.75,0,1,1,1.061,1.061l-4,4.005,4,4a.75.75,0,0,1-1.061,1.061Z"
+                transform="translate(6.629 6.8)" fill="#141124" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
-<script>
 
-export default {
-  name: "ProjectsItem",
-  head() {
-    const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
-    return {
-      title: this.post[this.$i18n.locale + '_seo_tit'] || this.post[this.$i18n.locale + '_tit'],
-      htmlAttrs: {
-        ...i18nHead.htmlAttrs
-      },
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.post[this.$i18n.locale + '_seo_des'],
-        },
-        { rel: "canonical", href: "https://hookahplace.ru" + (this.$i18n.locale == "en" ? "/en" : '') + "/projects/" + this.slug },
-        { rel: "alternate", hreflang: "ru-RU", href: "https://hookahplace.ru/projects/" + this.slug },
-        {
-          rel: "alternate",
-          hreflang: "en-US",
-          href: "https://hookahplace.ru/en/projects/" + this.slug,
-        },
-      ],
-    }
-  },
-  data() {
-    return {
-      slug: this.$route.params.slug,
-      toggler: false,
-      slide: 1,
-      allGal: [],
-      swiperOption: {
-        slidesPerView: 1,
-        allowTouchMove: true,
-        clickable: true,
-        mousewheel: {
-          forceToAxis: true,
-        },
-        bulletClass: 'swiper-pagination-bullet',
-        keyboard: {
-          enabled: true,
-        },
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-          renderFraction: function (currentClass, totalClass) {
-            return '<span class="' + currentClass + '"></span>' + ' <small>/ ' + '<span class="' + totalClass + '"></span></small>';
-          }
-        },
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      }
-    }
-  },
-  computed: {
-    projects() {
-      return this.$store.state.projects;
-    },
-    filteredProjects() {
-      return this.projects.filter(project => project.slug !== this.slug);
-    },
-    posts() {
-      return this.$store.state.projects;
-    },
-    post() {
-      return this.posts.find(el => el.slug === this.slug);
-    },
-    postIndex() {
-      return this.posts.findIndex(el => el.slug === this.slug);
-    },
-    nextPost() {
-      const nextIndex = this.postIndex + 1;
-      return nextIndex < this.posts.length ? this.posts[nextIndex] : null;
-    }
-  },
-  mounted() {
-    // Прокрутка страницы вверх после полной загрузки
+<script setup>
+import { useMain } from '~/store/main';
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Pagination, Keyboard, Mousewheel } from 'swiper/modules';
 
-    this.$nextTick(() => {
-      window.scrollBy(0, 1);
-    });
-    this.$nextTick(() => {
-      window.scrollTo({ top: 1, behavior: 'smooth' });
+const route = useRoute();
+const store = useMain();
+const { locale } = useI18n();
 
-      // В Safari smooth scrolling не всегда работает, поэтому добавим задержку
-      setTimeout(() => {
-        window.scrollBy(0, 1);
-        window.scrollTo(0, 1);
-      }, 300);
-    });
-    // Задержка вызова window.scrollTo для Safari
-    setTimeout(() => {
-      window.scrollBy(0, 1);
-      window.scrollTo(0, 1);
-    }, 0);
-    this.post?.gal?.forEach(el => {
-      if (typeof el.vid === 'string') {
-        this.allGal.push(el.vid);
-      } else if (typeof el.img === 'string') {
-        this.allGal.push(el.img);
-      }
-    })
-    this.post?.gal_m?.forEach(el => {
-      if (typeof el === 'string') {
-        this.allGal.push(el);
-      }
-    })
-    this.$store.dispatch('updateActivePr', this.post);
-  },
-  beforeDestroy() {
-    this.$store.dispatch('updateActivePr', null)
-  },
-  methods: {
-    // Проверяет, является ли ссылка на YouTube видео
-    isYouTubeVideo(url) {
-      return typeof url === 'string' && (url.includes("youtu.be") || url.includes("youtube.com"));
-    },
-    // Возвращает URL для вставки видео YouTube
-    embedYouTubeURL(url) {
-      // Если ссылка содержит youtu.be, то берем последнюю часть после /
-      if (url.includes("youtu.be")) {
-        const videoId = url.split("/").pop();
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
-      } else if (url.includes("youtube.com")) { // Если ссылка содержит youtube.com
-        // Парсим параметры из URL
-        const urlParams = new URLSearchParams(new URL(url).search);
-        const videoId = urlParams.get("v");
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
-      } else {
-        return url; // Если не YouTube ссылка, возвращаем как есть
-      }
-    },
-    clickImg(key) {
-      this.toggler = true;
-      this.slide = key + 1;
-      this.swiperOption.initialSlide = key;
-    },
-    closeModal() {
-      this.toggler = false;
-    },
-  },
-  async asyncData({ app }) {
-    await app.store.dispatch("getProjects");
-    await app.store.dispatch("getPage");
+await store.getProjects();
+
+const toggler = ref(false);
+const allGal = ref([]);
+const slideIndex = ref(0);
+
+const slug = computed(() => route.params.slug);
+const post = computed(() => store.projects.find((el) => el.slug === slug.value));
+const postIndex = computed(() => store.projects.findIndex((el) => el.slug === slug.value));
+
+const filteredProjects = computed(() => store.projects.filter((project) => project.slug !== slug.value));
+
+const seoTitle = computed(() => post.value ? post.value[locale.value + '_seo_tit'] || post.value[locale.value + '_tit'] : '');
+const seoDescription = computed(() => post.value ? post.value[locale.value + '_seo_des'] : '');
+
+const canonicalUrl = computed(() => `https://hookahplace.ru${locale.value === 'en' ? '/en' : ''}/projects/${slug.value}`);
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: 'alternate', hreflang: 'ru-RU', href: `https://hookahplace.ru/projects/${slug.value}` },
+    { rel: 'alternate', hreflang: 'en-US', href: `https://hookahplace.ru/en/projects/${slug.value}` },
+  ],
+});
+
+const isYouTubeVideo = (url) => url.includes("youtu.be") || url.includes("youtube.com");
+
+const embedYouTubeURL = (url) => {
+  if (url.includes("youtu.be")) {
+    const videoId = url.split("/").pop();
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
   }
-}
+  const urlParams = new URLSearchParams(new URL(url).search);
+  const videoId = urlParams.get("v");
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+};
+
+const clickImg = (key) => {
+  slideIndex.value = key;
+  toggler.value = true;
+};
+
+const closeModal = () => {
+  toggler.value = false;
+};
+
+onMounted(() => {
+  if (post.value) {
+    post.value.gal?.forEach((el) => {
+      if (typeof el.vid === "string") {
+        allGal.value.push(el.vid);
+      } else if (typeof el.img === "string") {
+        allGal.value.push(el.img);
+      }
+    });
+
+    post.value.gal_m?.forEach((el) => {
+      if (typeof el === "string") {
+        allGal.value.push(el);
+      }
+    });
+  }
+});
+
+const modules = [Navigation, Pagination, Keyboard, Mousewheel];
+
+const renderFraction = (currentClass, totalClass) => {
+  return `<span class="${currentClass}"></span> <small>/ <span class="${totalClass}"></span></small>`;
+};
 </script>
+
 <style lang="scss" scoped>
 .number-project {
   text-align: right;

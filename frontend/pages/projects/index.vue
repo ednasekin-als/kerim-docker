@@ -3,130 +3,117 @@
     <div class="pPr__head">
       <div class="row">
         <div class='col-12'>
-          <h1 class="h1">{{ $t('proj.tit') }}</h1>
+          <h1 class="h1">{{ $i('proj.tit') }}</h1>
         </div>
         <div class='col-12'>
-          <span class="h1">{{ (type == 'grid') ? projects.length : (type == 'list') ? filtPrCount : ''
-            }}</span>
+          <span class="h1">{{ type === 'grid' ? projects.length : type === 'list' ? filtPrCount : '' }}</span>
         </div>
       </div>
       <div class="tagList d-none d-lg-block">
-        <button :class="`tag tag_d p1 ${(type == 'grid' ? 'active' : '')}`" @click="changeType('grid')">
-          {{ $t('proj.btn.grid') }}
+        <button :class="`tag tag_d p1 ${type === 'grid' ? 'active' : ''}`" @click="changeType('grid')">
+          {{ $i('proj.btn.grid') }}
         </button>
-        <button :class="`tag tag_d p1 ${(type == 'list' ? 'active' : '')}`" @click="changeType('list')">
-          {{ $t('proj.btn.list') }}
+        <button :class="`tag tag_d p1 ${type === 'list' ? 'active' : ''}`" @click="changeType('list')">
+          {{ $i('proj.btn.list') }}
         </button>
-        <button :class="`tag tag_d p1 ${(type == 'map' ? 'active' : '')}`" @click="changeType('map')">
-          {{ $t('proj.btn.map') }}
+        <button :class="`tag tag_d p1 ${type === 'map' ? 'active' : ''}`" @click="changeType('map')">
+          {{ $i('proj.btn.map') }}
         </button>
       </div>
     </div>
     <SecProjPrFilt :cat="cat" :country="country" :year="year" @changeFilter="changeFilter" />
-    <SecProjPrList :projects="filtPr || projects" v-if="type == 'list'" />
-    <SecProjPrMap :projects="filtPr || projects" v-if="type == 'map'" />
-    <SecProjPrGrid :projects="filtPr || projects" @changeFilt='changeFilt' v-if="type == 'grid'" />
+    <SecProjPrList :projects="filtPr || projects" v-if="type === 'list'" />
+    <SecProjPrMap :projects="filtPr || projects" v-if="type === 'map'" />
+    <SecProjPrGrid :projects="filtPr || projects" @changeFilt="changeFilt" v-if="type === 'grid'" />
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { useMain } from '~/store/main';
 
-export default {
-  name: 'projects',
+const store = useMain();
+const { locale } = useI18n();
 
-  head() {
-    const i18nHead = this.$nuxtI18nHead({ addSeoAttributes: true })
-    return {
-      title: this.$t('proj.tit'),
-      htmlAttrs: {
-        ...i18nHead.htmlAttrs
-      },
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.$t('proj.tit'),
-        },
-        { rel: "canonical", href: "https://kerimovarchitects.com" + (this.$i18n.locale == "en" ? "/en" : '') + "/projects" },
-        { rel: "alternate", hreflang: "ru-RU", href: "https://kerimovarchitects.com/projects" },
-        {
-          rel: "alternate",
-          hreflang: "en-US",
-          href: "https://kerimovarchitects.com/en/projects",
-        },
-      ],
+const type = ref('grid');
+const filtCat = ref(null);
+const filtPr = ref(null);
+
+await store.getProjects();
+await store.getCCatPr();
+await store.getCCountryPr();
+await store.getCYearPr();
+
+const projects = computed(() => store.projects);
+const cat = computed(() => store.CCatPr);
+const country = computed(() => store.CCountryPr);
+const year = computed(() => store.CYearPr);
+
+const filtPrCount = ref(projects.value.length);
+
+onMounted(async () => {
+  window.scrollTo(0, 0);
+  if (typeof localStorage !== 'undefined') {
+    const savedType = localStorage.getItem('displayType');
+    if (savedType) {
+      type.value = savedType;
     }
-  },
-  data: () => ({
-    type: 'grid',
-    filtPrCount: 0,
-    filtCat: null,
-    filtPr: null,
-  }),
+  }
+});
 
-  async fetch({ store }) {
-    await store.dispatch("getCCatPr");
-    await store.dispatch("getCYearPr");
-    await store.dispatch("getCCountryPr");
-    await store.dispatch("getProjects");
-  },
+const changeFilter = (filter) => {
+  filtCat.value = filter;
+  filtPl();
+};
 
-  computed: {
-    ...mapState({
-      cat: 'CCatPr',
-      country: 'CCountryPr',
-      year: 'CYearPr',
-      projects: 'projects',
-    }),
-  },
+const filtPl = () => {
+  let pr = [...projects.value];
 
-  mounted() {
-    window.scrollTo(0, 0);
-    this.filtPrCount = this.projects.length;
+  if (filtCat.value?.cat) {
+    pr = pr.filter(el => el.cat.includes(filtCat.value.cat));
+  }
+  if (filtCat.value?.year) {
+    pr = pr.filter(el => el.year.includes(filtCat.value.year));
+  }
+  if (filtCat.value?.country) {
+    pr = pr.filter(el => el.country.includes(filtCat.value.country));
+  }
 
-    if (typeof localStorage !== 'undefined') {
-      const savedType = localStorage.getItem('displayType');
-      if (savedType) {
-        this.type = savedType;
-      }
-    }
-  },
-  methods: {
-    changeFilter(filter) {
-      this.filtCat = filter
-      this.filtPl()
-    },
-    filtPl() {
-      let pr = this.projects;
-      if (this.filtCat.cat) {
-        pr = pr.filter(el => el.cat.find(el => el === this.filtCat.cat))
-      }
-      if (this.filtCat.year) {
-        pr = pr.filter(el => el.year.find(el => el === this.filtCat.year))
-      }
-      if (this.filtCat.country) {
-        pr = pr.filter(el => el.country.find(el => el === this.filtCat.country))
-      }
-      this.filtPr = pr;
-    },
-    changeFilt(count) {
-      this.filtPrCount = count;
-      if (this.filtPrCount <= 9) {
-        this.filtPrCount = '0' + this.filtPrCount;
-      }
-    },
-    changeType(type) {
-      this.$store.dispatch('updateActivePr', null);
-      this.type = type;
+  pr.sort((a, b) => new Date(b.date) - new Date(a.date));
+  filtPr.value = pr;
+};
 
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('displayType', type);
-      }
-    },
-  },
-}
+const changeFilt = (count) => {
+  filtPrCount.value = count < 10 ? '0' + count : count;
+};
 
+const changeType = (newType) => {
+  store.updateActivePr(null);
+  type.value = newType;
+
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('displayType', newType);
+  }
+};
+
+const { $i } = useNuxtApp();
+const seoTitle = computed(() => $i('proj.tit'));
+const canonicalUrl = computed(() => `https://kerimovarchitects.com${locale.value === 'en' ? '/en/projects' : '/projects'}`);
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoTitle,
+  ogTitle: seoTitle,
+  ogDescription: seoTitle,
+  ogUrl: canonicalUrl,
+  canonical: canonicalUrl,
+});
+
+useHead({
+  link: [
+    { rel: 'alternate', hreflang: 'ru-RU', href: 'https://kerimovarchitects.com/projects' },
+    { rel: 'alternate', hreflang: 'en-US', href: 'https://kerimovarchitects.com/en/projects' },
+  ],
+});
 </script>
 <style lang="scss" scoped>
 .pPr__head {

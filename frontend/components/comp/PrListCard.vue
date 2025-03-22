@@ -1,53 +1,49 @@
 <template>
     <NuxtLink :to="localePath(`/projects/${project.slug}`)" class="PrListCard">
         <div class="PrListCard__content">
-            <p class="PrListCard__title p1 mp0">{{ project[$i18n.locale + '_tit'] }}</p>
+            <p class="PrListCard__title p1 mp0">{{ project[locale + '_tit'] }}</p>
             <sup v-if="project.cat[0]">
-                {{ cat.find(el => el.id == project.cat[0])[$i18n.locale + '_tit'] }}
+                {{ cat.find(el => el.id == project.cat[0])[locale + '_tit'] }}
             </sup>
-            <div :class="`PrListCard__img ${(this.showImg2 && project['r_img2'])}`">
+            <div :class="`PrListCard__img ${(showImg2 && project['r_img2'])}`">
                 <img :src="project['r_img1']">
             </div>
         </div>
     </NuxtLink>
 </template>
-<script>
+<script setup>
+import { useMain } from '~/store/main';
 
+const store = useMain();
+const { locale } = useI18n();
+const localePath = useLocalePath();
 
-export default ({
-    name: 'PrListCard',
-    data() {
-        return {
-            showImg2: false,
-        }
-    },
-    props: {
-        project: {
-            type: Object,
-        },
-    },
-    computed: {
-        cat() {
-            return this.$store.state.CCatPr
-        },
-        pr() {
-            return this.project
-        },
-    },
-    mounted() {
-        this.interval = setInterval(() => {
-            if (Math.random() < 0.1) {
-                this.showImg2 = !this.showImg2
-            }
-        }, 3000 + Math.random() * 3000);
-    },
+const props = defineProps({
+  project: {
+    type: Object,
+    required: true,
+  },
+});
 
-    beforeDestroy() {
-        console.log("bD")
-        clearInterval(this.interval)
-    },
-})
+const cat = computed(() => store.CCatPr);
+const showImg2 = ref(false);
+let interval = null; // Используем обычную переменную, а не ref
+
+onMounted(() => {
+  interval = setInterval(() => {
+    if (Math.random() < 0.1) {
+      showImg2.value = !showImg2.value;
+    }
+  }, 3000 + Math.random() * 3000);
+});
+
+onBeforeUnmount(() => {
+  if (interval) {
+    clearInterval(interval);
+  }
+});
 </script>
+
 <style lang="scss" scoped>
 .PrListCard {
     position: relative;

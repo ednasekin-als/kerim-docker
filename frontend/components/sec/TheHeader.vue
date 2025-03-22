@@ -1,63 +1,59 @@
 <template>
   <header :class="['header row', { 'header__opacity': menu }]">
     <div :class="`wrap__head d-lg-none ${(menu) ? 'wrap__head_openMenu' : ''}`">
+      <NuxtLink :to="'/'" class="wrap__logo headerLogo">
+        <p class="p1">Kerimov Architects</p>
+      </NuxtLink>
       <button :class="`openMenu ${(menu) ? 'active' : ''} `" @click="toggleMenu()" :menu="menu">
       </button>
     </div>
     <div class='header__logo'>
-      <NuxtLink :to="localePath('/')" class="headerLogo">
+      <NuxtLink :to="'/'" class="headerLogo">
         <p class="p1">Kerimov Architects</p>
       </NuxtLink>
     </div>
     <div class="header__nav">
       <ul class="header__menu">
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }"
-            :to="localePath('/projects')">{{ $t('head.proj') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/projects') }" :to="localePath('/projects')">{{ $i('head.proj') }}</nuxt-link>
         </li>
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }"
-            :to="localePath('/about')">{{ $t('head.about') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/about') }" :to="localePath('/about')">{{ $i('head.about') }}</nuxt-link>
         </li>
         <li>
-          <NuxtLink class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }"
-            :to="localePath('/contacts')">{{ $t('head.cont') }}</NuxtLink>
+          <nuxt-link class="p1 headLink" :class="{ headLink__active: isLinkActive('/contacts') }" :to="localePath('/contacts')">{{ $i('head.cont') }}</nuxt-link>
         </li>
       </ul>
     </div>
     <div class="header__switch">
-      <NuxtLink :to="switchLocalePath($i18n.locale == 'ru' ? 'en' : 'ru')" class="headLink p1 mp0">
-        <span :class="($i18n.locale == 'ru' ? 'active' : '')">Ru</span>
+      <NuxtLink :to="switchLocalePath(locale == 'ru' ? 'en' : 'ru')" class="headLink p1 mp0">
+        <span :class="(locale == 'ru' ? 'active' : '')">Ru</span>
         /
-        <span :class="($i18n.locale == 'en' ? 'active' : '')">En</span>
+        <span :class="(locale == 'en' ? 'active' : '')">En</span>
       </NuxtLink>
     </div>
     <Transition name="menu">
       <div v-if="menu" @toggleMenu="toggleMenu()" class="menu d-lg-none">
         <div class="menu__cont">
-          <NuxtLink :to="localePath('/')" @click.native="toggleMenu()" class="menuLogo">
-            <h3 class="h1">Kerimov Architects</h3>
-          </NuxtLink>
-
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()" :to="localePath('/projects')">
-            {{ $t('head.proj') }}
+            {{ $i('head.proj') }}
           </NuxtLink>
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()"  :to="localePath('/about')">
-            {{ $t('head.about') }}
+            {{ $i('head.about') }}
           </NuxtLink>
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()" :to="localePath('/contacts')">
-            {{ $t('head.cont') }}
+            {{ $i('head.cont') }}
           </NuxtLink>
 
           <div class="d-flex flex-column menu__item">
             <div class="" style="width: 100%;">
               <div class="line w-100 m-t-1r m-b-2r"></div>
             </div>
-            <NuxtLink @click.native="toggleMenu()" :to="switchLocalePath($i18n.locale == 'ru' ? 'en' : 'ru')"
+            <NuxtLink @click.native="toggleMenu()" :to="switchLocalePath(locale == 'ru' ? 'en' : 'ru')"
               class="h1m m-b-1r">
-              <span :class="($i18n.locale == 'ru' ? 'active' : '')">Ru</span>
+              <span :class="(locale == 'ru' ? 'active' : '')">Ru</span>
               /
-              <span :class="($i18n.locale == 'en' ? 'active' : '')">En</span>
+              <span :class="(locale == 'en' ? 'active' : '')">En</span>
             </NuxtLink>
           </div>
         </div>
@@ -66,39 +62,25 @@
   </header>
 </template>
 
+<script setup>
+const menu = ref(false);
 
-<script>
+const route = useRoute();
+const { locale } = useI18n();
+const localePath = useLocalePath();
+const switchLocalePath = useSwitchLocalePath();
 
-export default ({
-  name: 'TheHeader',
-  props: {
-    page: {
-      type: Object,
-    },
-  },
-  data: () => ({
-    menu: false,
-    header: false,
-    count: 5
-  }),
-  methods: {
-    toggleMenu() {
-      this.menu = !this.menu;
-    },
-    zeroFirst(num) {
-      return (num > 9) ? num : "0" + num;
-    },
-    headerClose() {
-      this.header = !this.header;
-    },
-    isLinkActive(route) {
-      return this.$route.path === route;
-    },
-  },
-  // beforeEnter() {
-  //     this.$i18n.finalizePendingLocaleChange()
-  // }
-})
+const toggleMenu = () => {
+  menu.value = !menu.value;
+};
+
+const isLinkActive = (path) => {
+  return route.path.includes(localePath(path));
+};
+
+console.log('localePath /projects:', localePath('/projects'));
+console.log('localePath /about:', localePath('/about'));
+
 </script>
 
 <style scoped lang="scss">
@@ -269,13 +251,14 @@ export default ({
   left: 0;
   top: 0;
   display: flex;
-  padding-right: 1.2rem;
+  padding: 0px 1.2rem;
   align-items: center;
   justify-content: right;
   background: rgba(242, 242, 242, .65);
   backdrop-filter: saturate(180%) blur(20px);
   z-index: 1000;
   height: 48px;
+  justify-content: space-between;
 
   &_openMenu {
     background: transparent;
