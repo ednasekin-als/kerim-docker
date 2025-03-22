@@ -1,22 +1,21 @@
 <template>
     <NuxtLink :to="localePath(`/projects/${project.slug}`)" class="PrListCard">
         <div class="PrListCard__content">
-            <p class="PrListCard__title p1 mp0">{{ project[$i18n.locale + '_tit'] }}</p>
+            <p class="PrListCard__title p1 mp0">{{ project[locale + '_tit'] }}</p>
             <sup v-if="project.cat[0]">
-                {{ cat.find(el => el.id == project.cat[0])[$i18n.locale + '_tit'] }}
+                {{ cat.find(el => el.id == project.cat[0])[locale + '_tit'] }}
             </sup>
-            <div :class="`PrListCard__img ${(this.showImg2 && project['r_img2'])}`">
+            <div :class="`PrListCard__img ${(showImg2 && project['r_img2'])}`">
                 <img :src="project['r_img1']">
             </div>
         </div>
     </NuxtLink>
 </template>
-
 <script setup>
 import { useMain } from '~/store/main';
 
 const store = useMain();
-const { $i18n } = useNuxtApp();
+const { locale } = useI18n();
 const localePath = useLocalePath();
 
 const props = defineProps({
@@ -26,14 +25,12 @@ const props = defineProps({
   },
 });
 
-await store.getCCatPr();
-
 const cat = computed(() => store.CCatPr);
 const showImg2 = ref(false);
-const interval = ref(null);
+let interval = null; // Используем обычную переменную, а не ref
 
 onMounted(() => {
-  interval.value = setInterval(() => {
+  interval = setInterval(() => {
     if (Math.random() < 0.1) {
       showImg2.value = !showImg2.value;
     }
@@ -41,8 +38,8 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (interval.value) {
-    clearInterval(interval.value);
+  if (interval) {
+    clearInterval(interval);
   }
 });
 </script>

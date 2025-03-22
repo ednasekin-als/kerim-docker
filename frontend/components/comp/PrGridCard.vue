@@ -27,8 +27,6 @@ const props = defineProps({
   },
 });
 
-await store.getCCatPr();
-
 const cat = computed(() => store.CCatPr);
 const showImg2 = ref(false);
 let interval = null;

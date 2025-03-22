@@ -1,6 +1,9 @@
 <template>
   <header :class="['header row', { 'header__opacity': menu }]">
     <div :class="`wrap__head d-lg-none ${(menu) ? 'wrap__head_openMenu' : ''}`">
+      <NuxtLink :to="'/'" class="wrap__logo headerLogo">
+        <p class="p1">Kerimov Architects</p>
+      </NuxtLink>
       <button :class="`openMenu ${(menu) ? 'active' : ''} `" @click="toggleMenu()" :menu="menu">
       </button>
     </div>
@@ -32,10 +35,6 @@
     <Transition name="menu">
       <div v-if="menu" @toggleMenu="toggleMenu()" class="menu d-lg-none">
         <div class="menu__cont">
-          <NuxtLink :to="localePath('/')" @click.native="toggleMenu()" class="menuLogo">
-            <h3 class="h1">Kerimov Architects</h3>
-          </NuxtLink>
-
           <NuxtLink class="h1m m-b-1r menu__item" @click.native="toggleMenu()" :to="localePath('/projects')">
             {{ $i('head.proj') }}
           </NuxtLink>
@@ -252,13 +251,14 @@ console.log('localePath /about:', localePath('/about'));
   left: 0;
   top: 0;
   display: flex;
-  padding-right: 1.2rem;
+  padding: 0px 1.2rem;
   align-items: center;
   justify-content: right;
   background: rgba(242, 242, 242, .65);
   backdrop-filter: saturate(180%) blur(20px);
   z-index: 1000;
   height: 48px;
+  justify-content: space-between;
 
   &_openMenu {
     background: transparent;

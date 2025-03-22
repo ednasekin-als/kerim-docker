@@ -6,7 +6,7 @@
           <h1 class="h1">{{ $i('proj.tit') }}</h1>
         </div>
         <div class='col-12'>
-          <span class="h1">{{ type === 'grid' ? projectsSSR.length : type === 'list' ? filtPrCount : '' }}</span>
+          <span class="h1">{{ type === 'grid' ? projects.length : type === 'list' ? filtPrCount : '' }}</span>
         </div>
       </div>
       <div class="tagList d-none d-lg-block">
@@ -22,9 +22,9 @@
       </div>
     </div>
     <SecProjPrFilt :cat="cat" :country="country" :year="year" @changeFilter="changeFilter" />
-    <SecProjPrList :projects="filtPr || projectsSSR" v-if="type === 'list'" />
-    <SecProjPrMap :projects="filtPr || projectsSSR" v-if="type === 'map'" />
-    <SecProjPrGrid :projects="filtPr || projectsSSR" @changeFilt="changeFilt" v-if="type === 'grid'" />
+    <SecProjPrList :projects="filtPr || projects" v-if="type === 'list'" />
+    <SecProjPrMap :projects="filtPr || projects" v-if="type === 'map'" />
+    <SecProjPrGrid :projects="filtPr || projects" @changeFilt="changeFilt" v-if="type === 'grid'" />
   </div>
 </template>
 
@@ -32,41 +32,25 @@
 import { useMain } from '~/store/main';
 
 const store = useMain();
-
-const { locale } = useI18n()
-
-const { data: pageInfo } = useAsyncData('projectsData', async () => {
-  try {
-    const [projects, categories, years, countries] = await Promise.all([
-      $fetch('/wp-json/wp/v2/projects?per_page=100'),
-      $fetch('/wp-json/wp/v2/cat?per_page=100'),
-      $fetch('/wp-json/wp/v2/year?per_page=100'),
-      $fetch('/wp-json/wp/v2/country?per_page=100')
-    ]);
-
-    return {
-      projects: projects?.filter(el => el.status === 'publish') ?? [],
-      categories: categories?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? [],
-      years: years?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? [],
-      countries: countries?.filter(el => el.count).sort((a, b) => b.order - a.order) ?? []
-    };
-  } catch (error) {
-    console.error("Ошибка загрузки данных:", error);
-    return { projects: [], categories: [], years: [], countries: [] };
-  }
-});
-
-const projectsSSR = computed(() => pageInfo.value?.projects ?? []);
-const cat = computed(() => pageInfo.value?.categories ?? []);
-const country = computed(() => pageInfo.value?.countries ?? []);
-const year = computed(() => pageInfo.value?.years ?? []);
+const { locale } = useI18n();
 
 const type = ref('grid');
-const filtPrCount = ref(projectsSSR.value.length);
 const filtCat = ref(null);
 const filtPr = ref(null);
 
-onMounted(() => {
+await store.getProjects();
+await store.getCCatPr();
+await store.getCCountryPr();
+await store.getCYearPr();
+
+const projects = computed(() => store.projects);
+const cat = computed(() => store.CCatPr);
+const country = computed(() => store.CCountryPr);
+const year = computed(() => store.CYearPr);
+
+const filtPrCount = ref(projects.value.length);
+
+onMounted(async () => {
   window.scrollTo(0, 0);
   if (typeof localStorage !== 'undefined') {
     const savedType = localStorage.getItem('displayType');
@@ -82,7 +66,8 @@ const changeFilter = (filter) => {
 };
 
 const filtPl = () => {
-  let pr = [...projectsSSR.value];
+  let pr = [...projects.value];
+
   if (filtCat.value?.cat) {
     pr = pr.filter(el => el.cat.includes(filtCat.value.cat));
   }
@@ -92,6 +77,8 @@ const filtPl = () => {
   if (filtCat.value?.country) {
     pr = pr.filter(el => el.country.includes(filtCat.value.country));
   }
+
+  pr.sort((a, b) => new Date(b.date) - new Date(a.date));
   filtPr.value = pr;
 };
 
@@ -102,12 +89,13 @@ const changeFilt = (count) => {
 const changeType = (newType) => {
   store.updateActivePr(null);
   type.value = newType;
+
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem('displayType', newType);
   }
 };
 
-const { $i } = useNuxtApp()
+const { $i } = useNuxtApp();
 const seoTitle = computed(() => $i('proj.tit'));
 const canonicalUrl = computed(() => `https://kerimovarchitects.com${locale.value === 'en' ? '/en/projects' : '/projects'}`);
 
@@ -127,7 +115,6 @@ useHead({
   ],
 });
 </script>
-
 <style lang="scss" scoped>
 .pPr__head {
   background: var(--white);

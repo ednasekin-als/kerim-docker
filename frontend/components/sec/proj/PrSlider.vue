@@ -1,46 +1,51 @@
 <template>
-  <div v-swiper:mySwiper="swiperProject" class="PrSlider">
-    <div class="swiper-wrapper">
-      <div v-for="project in projects" :key="project.id" class="swiper-slide">
+  <section class="PrSlider">
+    <swiper
+      :modules="modules"
+      :slides-per-view="1"
+      :navigation="swiperOptions.navigation"
+      class="mySwiper"
+    >
+      <swiper-slide v-for="project in projects" :key="project.id">
         <div class="PrSlider__slide" :style="{ backgroundImage: `url(${project.r_img1})` }">
           <p class="h1">{{ project[$i18n.locale + '_tit'] }}</p>
           <NuxtLink :to="`/projects/${project.slug}`" class="p1 btn">
             {{ $i('main.btn.projD') }}
           </NuxtLink>
         </div>
-      </div>
-    </div>
+      </swiper-slide>
+    </swiper>
+
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
-  </div>
+  </section>
 </template>
 
-<script>
-export default {
-  name: 'swiperProject',
-  data() {
-    return {
-      swiperProject: {
-        slidesPerView: 1,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      }
-    }
-  },
-  props: {
-    projects: {
-      type: Array,
-      required: true,
+<script setup>
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Navigation } from 'swiper/modules';
+import 'swiper/swiper-bundle.css';
 
-    },
-  },
-};
+defineProps({
+  projects: {
+    type: Array,
+    required: true
+  }
+});
+
+const modules = ref([Navigation]);
+
+const swiperOptions = ref({
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev"
+  }
+});
 </script>
 
 <style scoped lang="scss">
 .PrSlider {
+  position: relative;
   &__slide {
     display: flex;
     flex-direction: column;

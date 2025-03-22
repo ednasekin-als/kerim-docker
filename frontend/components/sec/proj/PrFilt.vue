@@ -1,214 +1,213 @@
 <template>
-    <div class="PrFilt">
-        <div class="padO">
-            <div class="tagList">
-                <button v-for="(item, cat) in cat" :key="item.id"
-                    :class="`tag tag_d p1 ${(item.id == localCat?.id) ? 'active' : ''}`"
-                    v-html="item[$i18n.locale + '_tit'] || item.name" @click="clickCat(item)"></button>
-            </div>
-        </div>
-        <!-- <div class="padO">
-            <client-only>
-                <div class="wrapFilt">
-                    <v-select :filterable="false" :searchable="false" :options="country" :label="$i18n.locale + '_tit'"
-                        :placeholder="$i('proj.btn.country')" v-model="localCountry" @input="changeFilter">
-
-                        <template #open-indicator="{ attributes }">
-                            <span class="arrow">
-                                <span></span><span></span>
-                            </span>
-                        </template>
-
-                    </v-select>
-                </div>
-            </client-only>
-        </div> -->
+  <div class="PrFilt">
+    <div class="padO">
+      <div class="tagList">
+        <button v-for="item in cat" :key="item.id" :class="`tag tag_d p1 ${item.id === localCat?.id ? 'active' : ''}`"
+          v-html="item[$i18n.locale + '_tit'] || item.name" @click="clickCat(item)"></button>
+      </div>
     </div>
+
+    <div class="padO">
+      <div class="wrapFilt">
+        <div class="custom-select" @click="toggleDropdown" @keydown.prevent="handleKeydown" tabindex="0">
+          <span>{{ localCountry ? localCountry[$i18n.locale + '_tit'] : $i('proj.btn.country') }}</span>
+          <div class="custom-select__setting">
+            <span v-if="localCountry" class="clear-btn" @click.stop="clearSelection">✕</span>
+            <svg class="arrow" :class="{ open: dropdownOpen }"  width="18px" height="10px" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg">
+              <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                stroke-linejoin="round">
+                <g id="24-px-Icons" transform="translate(-267.000000, -79.000000)" stroke="#000000">
+                  <g id="ic_up" transform="translate(264.000000, 72.000000)">
+                    <g transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000)">
+                      <g stroke-width="1.5">
+                        <g id="back" transform="translate(8.000000, 4.000000)">
+                          <path d="M8,0 L0,8"></path>
+                          <path d="M0,8 L8,16"></path>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <ul v-if="dropdownOpen" class="dropdown">
+            <li v-for="(item, index) in country" :key="item.id" :class="{ active: index === highlightedIndex }"
+              @click="selectCountry(item)" @mouseover="highlightedIndex = index">
+              {{ item[$i18n.locale + '_tit'] }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-<script>
-export default {
-    name: "SFilter",
 
-    props: {
-        type: {
-            type: String,
-        },
-        cat: {
-            type: Array,
-            required: true
-        },
-        country: {
-            type: Array,
-            required: true
-        },
-        year: {
-            type: Array,
-            required: true
-        },
-    },
+<script setup>
 
-    data() {
-        return {
-            localCat: null,
-            localCountry: null,
-        };
-    },
+const props = defineProps({
+  cat: Array,
+  country: Array,
+  year: Array,
+});
 
-    mounted() {
-        if (typeof localStorage !== 'undefined') {
-            const activeCat = localStorage.getItem('activeCat');
-            const savedTime = localStorage.getItem('savedTime');
-            const now = new Date().getTime();
+const emit = defineEmits(['changeFilter']);
 
-            if (activeCat && savedTime) {
-                const elapsedTime = now - savedTime;
-                const timeLimit = 24 * 60 * 60 * 1000; // 24 часа
+const localCat = ref(null);
+const localCountry = ref(null);
+const dropdownOpen = ref(false);
+const highlightedIndex = ref(-1);
 
-                if (elapsedTime < timeLimit) {
-                    this.localCat = JSON.parse(activeCat);
-                } else {
-                    localStorage.removeItem('activeCat');
-                    localStorage.removeItem('savedTime');
-                }
-            }
-        }
-    },
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+  if (dropdownOpen.value) {
+    highlightedIndex.value = -1;
+  }
+};
 
-    methods: {
-        clickCat(cat) {
-            if (this.localCat && this.localCat.id == cat.id) {
-                this.localCat = null;
-            } else {
-                this.localCat = cat;
-            }
+const selectCountry = (item) => {
+  localCountry.value = item;
+  dropdownOpen.value = false;
+  changeFilter();
+};
 
-            if (typeof localStorage !== 'undefined') {
-                localStorage.setItem('activeCat', JSON.stringify(this.localCat));
-                localStorage.setItem('savedTime', new Date().getTime());
-            }
+const clearSelection = () => {
+  localCountry.value = null;
+  changeFilter();
+};
 
-            this.changeFilter();
-        },
+const clickCat = (cat) => {
+  localCat.value = localCat.value?.id === cat.id ? null : cat;
+  changeFilter();
+};
 
-        changeFilter() {
-            let arrFilt = {};
-            if (this.localCat) {
-                arrFilt.cat = this.localCat.id;
-            }
-            if (this.year) {
-                arrFilt.year = this.year.id;
-            }
-            if (this.localCountry) {
-                arrFilt.country = this.localCountry.id;
-            }
+const changeFilter = () => {
+  let arrFilt = {
+    cat: localCat.value?.id,
+    year: props.year?.id,
+    country: localCountry.value?.id,
+  };
+  emit('changeFilter', arrFilt);
+};
 
-            if (typeof localStorage !== 'undefined') {
-                localStorage.setItem('activeFilter', JSON.stringify(arrFilt));
-            }
+const handleKeydown = (event) => {
+  if (!dropdownOpen.value) {
+    toggleDropdown();
+    return;
+  }
 
-            this.$emit('changeFilter', arrFilt);
-        },
+  switch (event.key) {
+    case 'ArrowDown':
+      if (highlightedIndex.value < props.country.length - 1) {
+        highlightedIndex.value++;
+      }
+      break;
+    case 'ArrowUp':
+      if (highlightedIndex.value > 0) {
+        highlightedIndex.value--;
+      }
+      break;
+    case 'Enter':
+      if (highlightedIndex.value !== -1) {
+        selectCountry(props.country[highlightedIndex.value]);
+      }
+      break;
+    case 'Escape':
+      dropdownOpen.value = false;
+      break;
+  }
+};
 
-        loadActiveCat() {
-            if (typeof localStorage !== 'undefined') {
-                const storedCat = localStorage.getItem('activeCat');
-                return storedCat ? JSON.parse(storedCat) : null;
-            }
-            return null;
-        },
-    }
-}
+watch(dropdownOpen, (newVal) => {
+  if (newVal) {
+    document.addEventListener('click', closeOnClickOutside);
+  } else {
+    document.removeEventListener('click', closeOnClickOutside);
+  }
+});
+
+const closeOnClickOutside = (event) => {
+  if (!event.target.closest('.wrapFilt')) {
+    dropdownOpen.value = false;
+  }
+};
 </script>
-<style lang="scss" scoped>
-.arrow {
-    width: 4px;
-    height: 1.25rem;
-    display: inline-block;
-    position: relative;
-    margin: 0 1rem;
-    cursor: pointer;
 
-    @media (max-width: 767.98px) {
-        width: 5px;
-    }
-}
-
-.arrow span {
-    top: 0.5rem;
-    position: absolute;
-    width: 9px;
-    height: 2px;
-    background-color: #000;
-    display: inline-block;
-    transition: all 0.2s ease;
-    border-radius: 25px;
-
-    @media (max-width: 767.98px) {
-        width: 12px;
-        height: 2px;
-    }
-}
-
-.arrow span:first-of-type {
-    left: 0;
-    transform: rotate(-45deg);
-}
-
-.arrow span:last-of-type {
-    right: 0;
-    transform: rotate(45deg);
-}
-
-.vs--open .arrow span:first-of-type {
-    transform: rotate(45deg);
-}
-
-.vs--open .arrow span:last-of-type {
-    transform: rotate(-45deg);
-}
-
-.wrapFilt {
-    --vs-dropdown-option--active-bg: var(--black);
-}
-
-
-.vs__dropdown-option--highlight {
-    background: var(--black);
-}
-
-.filtTit {
-    margin-bottom: 2rem;
-}
-
-.wrapFilt {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-
-    @media (max-width: 768.98px) {
-        grid-template-columns: 1fr;
-    }
-
+<style scoped>
+.PrFilt {
+  background: var(--white);
 }
 
 .padO {
-    margin: var(--main-pad);
+  margin: var(--main-pad);
 }
 
-.PrFilt {
-    background: var(--white);
+.tag.active {
+  background-color: #000;
+  color: #fff;
 }
 
-.tagList {}
-
-.arrowSel {
-    font-size: 40px;
-    transition: 0.4s;
+.wrapFilt {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.vs--open {
-    .arrowSel {
-        transform: rotate(180deg);
-    }
+.custom-select {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid #000;
+  border-radius: 2rem;
+  cursor: pointer;
+  padding: 0.5rem 15px;
+  user-select: none;
+  position: relative;
+}
+
+.custom-select__setting {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.clear-btn {
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
+.clear-btn:hover {
+  color: #000;
+}
+
+/* Список */
+.dropdown {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border-radius: 2rem;
+  cursor: pointer;
+  border: 1px solid #000;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  overflow-y: auto;
+  z-index: 10;
+  left: 0px;
+  top: 3rem;
+}
+
+.dropdown li {
+  padding: 0.5rem 15px;
+  cursor: pointer;
+}
+
+.dropdown li:hover,
+.dropdown li.active {
+  background: #f0f0f0;
 }
 </style>
