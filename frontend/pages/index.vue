@@ -2,7 +2,7 @@
   <div class="main-projects">
     <div class="main-projects__content">
       <div class="main-projects__intro">
-        <img v-if="page[locale + '_m_img']" :src="page[locale + '_m_img']" alt="">
+        <img v-if="page[locale + '_m_img']" :src="page[locale + '_m_img']"  width="1920" height="1080" fetchpriority="high" alt="">
         <div class="main-projects__info">
           <div class="main-projects__title">
             <h1 class="h1">Kerimov Architects</h1>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="main-projects__intro" v-for="(item, key) in filteredProjects">
-        <img :src="item.r_img1 || item[locale + '_img1']" alt="">
+        <img :src="item.r_img1 || item[locale + '_img1']" loading="lazy" alt="">
         <div class="main-projects__info">
           <div class="main-projects__title">
             <h1 class="h1">{{ item[locale + '_tit'] }}</h1>
@@ -28,7 +28,7 @@
           </div>
           <div class="tagList">
             <span class="tag p1">
-              {{ cat?.find(el => el.id == item.cat?.[0])?.[locale + '_tit'] }}
+              {{cat?.find(el => el.id == item.cat?.[0])?.[locale + '_tit']}}
             </span>
           </div>
           <div class="main-projects__link">

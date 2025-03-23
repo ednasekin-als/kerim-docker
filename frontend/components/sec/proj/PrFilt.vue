@@ -154,6 +154,13 @@ const closeOnClickOutside = (event) => {
   gap: 1rem;
 }
 
+
+@media (max-width: 768px) {
+  .wrapFilt {
+    grid-template-columns: 1fr;
+  }
+}
+
 .custom-select {
   display: flex;
   justify-content: space-between;
@@ -165,6 +172,10 @@ const closeOnClickOutside = (event) => {
   padding: 0.5rem 15px;
   user-select: none;
   position: relative;
+}
+
+.custom-select span {
+  color: #9b9b9b;
 }
 
 .custom-select__setting {
@@ -188,7 +199,7 @@ const closeOnClickOutside = (event) => {
   position: absolute;
   width: 100%;
   background: white;
-  border-radius: 2rem;
+  border-radius: 1.5em;
   cursor: pointer;
   border: 1px solid #000;
   list-style: none;
@@ -199,6 +210,7 @@ const closeOnClickOutside = (event) => {
   z-index: 10;
   left: 0px;
   top: 3rem;
+  padding: 20px 0px;
 }
 
 .dropdown li {

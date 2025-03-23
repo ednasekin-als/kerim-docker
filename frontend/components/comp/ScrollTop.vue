@@ -55,6 +55,7 @@ onUnmounted(() => window.removeEventListener('scroll', checkScroll));
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
+  z-index: 1000;
 }
 
 .goTop.show {

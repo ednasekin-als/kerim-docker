@@ -4,7 +4,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return rawHtml
       .replace(/<p>\s*&nbsp;\s*<\/p>/g, "")
-      .split(/<\/p>\s*<p>/)
+      .replace(/<br\s*\/?>/g, "\n") 
+      .replace(/<\/?span.*?>/g, "")
+      .split(/<\/p>\s*<p>/) 
       .map((p) => p.replace(/<\/?p>/g, "").trim())
       .filter((p) => p.length > 0);
   };

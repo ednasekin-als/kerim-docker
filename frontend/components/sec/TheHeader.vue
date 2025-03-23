@@ -108,7 +108,7 @@ console.log('localePath /about:', localePath('/about'));
   padding: 0px var(--main-pad) 0px var(--main-pad);
   backdrop-filter: saturate(180%) blur(20px);
   background: rgba(242, 242, 242, .65);
-  z-index: 5;
+  z-index: 15;
 
   &__opacity {
     backdrop-filter: none !important;
@@ -254,8 +254,8 @@ console.log('localePath /about:', localePath('/about'));
   padding: 0px 1.2rem;
   align-items: center;
   justify-content: right;
-  background: rgba(242, 242, 242, .65);
-  backdrop-filter: saturate(180%) blur(20px);
+  // background: rgba(242, 242, 242, .65);
+  // backdrop-filter: saturate(180%) blur(20px);
   z-index: 1000;
   height: 48px;
   justify-content: space-between;
