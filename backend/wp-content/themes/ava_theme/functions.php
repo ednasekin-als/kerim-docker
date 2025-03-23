@@ -184,16 +184,6 @@ add_filter('rest_page_collection_params', 'increase_per_page_limit', 10, 2);
 add_filter('rest_category_collection_params', 'increase_per_page_limit', 10, 2);
 add_filter('rest_user_collection_params', 'increase_per_page_limit', 10, 2);
 
-function update_site_button($wp_admin_bar) {
-  $args = array(
-    'id' => 'site_update',
-    'title' => 'Обновить сайт',
-    'class' => 'site_update',
-  );
-  $wp_admin_bar->add_node($args);
-}
-add_action('admin_bar_menu', 'update_site_button', 999);
-
 function add_cors_headers() {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
