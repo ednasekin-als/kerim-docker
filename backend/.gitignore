@@ -9,6 +9,9 @@
 /wp-content/index.php
 /wp-content/wp-config.php
 /wp-content/languages
+/wp-content/backups-dup-lite
+/wp-content/backups-dup-pro
+/wp-content/plugins
 /wp-content/plugins/index.php
 /wp-content/themes/index.php
 /wp-includes/

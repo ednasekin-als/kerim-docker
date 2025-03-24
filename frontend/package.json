@@ -28,7 +28,8 @@
     "vue": "^3.5.13",
     "vue-scroll-snap": "^0.1.11",
     "vue-server-renderer": "^2.7.10",
-    "vue-template-compiler": "^2.7.10"
+    "vue-template-compiler": "^2.7.10",
+    "yandex-metrika-module-nuxt3": "^1.5.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",

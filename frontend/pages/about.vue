@@ -218,7 +218,7 @@
                 <span></span><span></span>
               </span>
             </div>
-            <p class="p1 mp0">{{ item.val }}</p>
+            <p class="p1 mp0">{{ stripParagraphs(item.val) }}</p>
           </div>
           <div class="ac-panel-wrapper" ref="accordionPanels" :class="{ open: openAccordions.includes(key) }" :style="getPanelStyle(key)">
             <div class="ac-panel">
@@ -277,6 +277,11 @@ const getPanelStyle = (index) => {
   return openAccordions.value.includes(index)
     ? { maxHeight: panel.scrollHeight + 'px', opacity: 1 }
     : { maxHeight: '0', opacity: 0 };
+};
+
+const stripParagraphs = (html) => {
+  if (!html) return "";
+  return html.replace(/<\/?p>/g, "").trim();
 };
 
 const toggleAccordion = (index) => {

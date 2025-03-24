@@ -9,7 +9,6 @@ export default defineNuxtConfig({
       name: "page",
       mode: "out-in",
     },
-    errorHandler: "~/layouts/error.vue",
   },
 
   nitro: {
@@ -45,7 +44,15 @@ export default defineNuxtConfig({
   components: true,
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@pinia/nuxt", "@nuxtjs/i18n", "@nuxtjs/sitemap"],
+  modules: ["@pinia/nuxt", "@nuxtjs/i18n", "@nuxtjs/sitemap", "yandex-metrika-module-nuxt3"],
+
+  yandexMetrika: {
+		id: '97429270',
+		webvisor: true,
+		clickmap: true,
+		trackLinks: true,
+		accurateTrackBounce: true
+  },
 
   i18n: {
     defaultLocale: "ru",
