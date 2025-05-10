@@ -1,6 +1,17 @@
 <?php
 
 add_action( 'rest_api_init', function () {	
+	register_rest_field( 'projects', 'gal_pub', array(
+        'get_callback' => function ( $post_arr ) {
+            $arr = array();
+            foreach (carbon_get_post_meta( $post_arr['id'], 'pub_gal' ) as &$value) {
+                array_push($arr, wp_get_attachment_image_url( $value, 'full'));
+            };
+            return $arr;
+        },
+        'update_callback' => null,
+        'schema' => null
+    ));
 	register_rest_field( 'projects', 'gal_m', array(
 		'get_callback' => function ( $post_arr ) {
 
@@ -530,7 +541,6 @@ foreach ($lang as &$langI) {
 		Field::make( 'text', $langI.'_tit1', 'Заголовок' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'rich_text',  $langI.'_val1', 'Описание' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'rich_text',  $langI.'_val2', 'Описание' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
-		Field::make( 'image', $langI.'_img_l', __( 'Фото2' ) )->set_width( 30 )->set_value_type( 'url' )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'text', $langI.'_tit2', 'Заголовок' )->set_width( 70 )->set_visible_in_rest_api( $visible = true ),
 		
 		Field::make( 'complex', $langI.'_list', 'Список' )
@@ -558,6 +568,7 @@ foreach ($lang as &$langI) {
 		Field::make( 'map', 'map', __( 'Map' ) )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'complex', 'gal', 'Галерея с описанием' )
 		->add_fields( $arrGal )->set_visible_in_rest_api( $visible = true ),
+		Field::make( 'media_gallery', 'pub_gal', __( 'Галерея наград' ) )->set_type( array( 'image' ) )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'media_gallery', 'a_gal', __( 'Галерея' ) )->set_type( array( 'image' ) )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'association', 'ass', __( 'Следующий проект' ) )->set_max( 1 )->set_types( array(
 			array(

@@ -1,10 +1,12 @@
-FROM node:20-alpine
-RUN if lscpu | grep -q "aarch64"; then RUN apk add g++ make python; fi
+FROM node:20
+
+RUN apt-get update && \
+    apt-get install -y python3 make g++ && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .

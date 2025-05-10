@@ -28,19 +28,28 @@
           </div>
         </div>
       </div>
-      <div v-if="post[locale + '_img_l']" class="PrDet__aww row align-items-center offset-6">
-        <div class="col-lg-2 col-4 achievements">
-          <img :src="post[locale + '_img_l']" alt="">
-        </div>
-        <div class="col-lg-21 offset-lg-1 col-19 offset-1">
+      <div v-if="post['gal_pub']" class="PrDet__aww row align-items-center offset-6">
+        <div class="achievements-container">
+          <transition name="fade" mode="out-in">
+            <img
+              :key="currentIndex"
+              :src="post['gal_pub'][currentIndex]"
+              loading="lazy"
+              alt="Achievement"
+              class="achievement-image"
+            >
+          </transition>
           <p class="h2">
             {{ post[locale + '_tit2'] }}
           </p>
         </div>
       </div>
-      <p v-else class="h2">
-        {{ post[locale + '_tit2'] }}
-      </p>
+      <div v-else class="PrDet__aww row align-items-center offset-6">
+        <p class="h2">
+          {{ post[locale + '_tit2'] }}
+        </p>
+      </div>
+
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md- offset-md- col-18 offset-6 PrDet__text'>
         <p v-for="(text, index) in $html(post[locale + '_val1'])" :key="index" class="p1 postContent">
           {{ text }}
@@ -138,9 +147,14 @@ const toggler = ref(false);
 const allGal = ref([]);
 const slideIndex = ref(0);
 
+const currentIndex = ref(0)
+let intervalId = null
+
 const slug = computed(() => route.params.slug);
 const post = computed(() => store.projects.find((el) => el.slug === slug.value));
 const postIndex = computed(() => store.projects.findIndex((el) => el.slug === slug.value));
+
+console.log('post', post.value);
 
 const filteredProjects = computed(() => store.projects.filter((project) => project.slug !== slug.value));
 
@@ -177,6 +191,12 @@ const embedYouTubeURL = (url) => {
   return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
 };
 
+const startCarousel = () => {
+  intervalId = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % post.value['gal_pub'].length
+  }, 3000)
+}
+
 const clickImg = (key) => {
   slideIndex.value = key;
   toggler.value = true;
@@ -202,7 +222,12 @@ onMounted(() => {
       }
     });
   }
+  if (post.value['gal_pub'] && post.value['gal_pub'].length !== 1) startCarousel();
 });
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+})
 
 const modules = [Navigation, Pagination, Keyboard, Mousewheel];
 
@@ -294,6 +319,7 @@ const renderFraction = (currentClass, totalClass) => {
 }
 
 .PrDet__aww {
+  padding: 20px 0px;
   @media (max-width: 768px) {
     display: flex;
     margin-top: 40px;
@@ -554,4 +580,52 @@ const renderFraction = (currentClass, totalClass) => {
     transform: scale(1.2);
   }
 }
+
+
+.achievements-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  p {
+    min-width: 600px;
+    width: 80%;
+
+    @media (max-width: 1024.98px) {
+      min-width: 400px;
+      width: 70%;
+    }
+
+    @media (max-width: 768px) {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.achievement-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+
+  @media (max-width: 768px) {
+    height: 300px;
+    width: 300px;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>
