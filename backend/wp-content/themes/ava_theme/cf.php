@@ -541,7 +541,7 @@ foreach ($lang as &$langI) {
 		Field::make( 'text', $langI.'_tit1', 'Заголовок' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'rich_text',  $langI.'_val1', 'Описание' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
 		Field::make( 'rich_text',  $langI.'_val2', 'Описание' )->set_width( 100 )->set_visible_in_rest_api( $visible = true ),
-		Field::make( 'text', $langI.'_tit2', 'Заголовок' )->set_width( 70 )->set_visible_in_rest_api( $visible = true ),
+		Field::make( 'text', $langI.'_tit2', 'Заголовок награды' )->set_width( 70 )->set_visible_in_rest_api( $visible = true ),
 		
 		Field::make( 'complex', $langI.'_list', 'Список' )
 		->add_fields( array(

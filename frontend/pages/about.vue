@@ -8,13 +8,19 @@
       </div>
       <p class="h2" v-html="page[locale + '_tit_sm']"></p>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 '>
-        <p class="p1 postContent" v-html="page[locale + '_val1']"></p>
+        <p class="p1 postContent">
+          {{ stripAllTags(page[locale + '_val1']) }}
+        </p>
       </div>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 '>
-        <p class="p1 postContent" v-html="page[locale + '_val2']"></p>
+        <p class="p1 postContent">
+          {{ stripAllTags(page[locale + '_val2']) }}
+        </p>
       </div>
       <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 '>
-        <p class="p1 postContent" v-html="page[locale + '_val3']"></p>
+        <p class="p1 postContent">
+          {{ stripAllTags(page[locale + '_val3']) }}
+        </p>
       </div>
     </div>
     <ClientOnly>
@@ -218,7 +224,7 @@
                 <span></span><span></span>
               </span>
             </div>
-            <p class="p1 mp0">{{ stripParagraphs(item.val) }}</p>
+            <p class="p1 mp0">{{ stripAllTags(item.val) }}</p>
           </div>
           <div class="ac-panel-wrapper" ref="accordionPanels" :class="{ open: openAccordions.includes(key) }" :style="getPanelStyle(key)">
             <div class="ac-panel">
@@ -279,9 +285,13 @@ const getPanelStyle = (index) => {
     : { maxHeight: '0', opacity: 0 };
 };
 
-const stripParagraphs = (html) => {
+const stripAllTags = (html) => {
   if (!html) return "";
-  return html.replace(/<\/?p>/g, "").trim();
+  let text = html.replace(/<\/?[a-z][^>]*>/g, "");
+  text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/\s+/g, ' ').trim();
+
+  return text;
 };
 
 const toggleAccordion = (index) => {
@@ -453,6 +463,7 @@ useHead({
 
     @media (max-width: 767.98px) {
       font-weight: 500;
+      font-size: 3.8888888889vw;
     }
   }
 

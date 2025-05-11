@@ -1,14 +1,20 @@
 <template>
   <header :class="['header row', { 'header__opacity': menu }]">
     <div :class="`wrap__head d-lg-none ${(menu) ? 'wrap__head_openMenu' : ''}`">
-      <NuxtLink :to="'/'" class="wrap__logo headerLogo">
+      <div v-if="isHomePage" class="wrap__logo headerLogo">
+        <p class="p1">Kerimov Architects</p>
+      </div>
+      <NuxtLink v-else to="/" class="wrap__logo headerLogo">
         <p class="p1">Kerimov Architects</p>
       </NuxtLink>
       <button :class="`openMenu ${(menu) ? 'active' : ''} `" @click="toggleMenu()" :menu="menu">
       </button>
     </div>
     <div class='header__logo'>
-      <NuxtLink :to="'/'" class="headerLogo">
+      <div v-if="isHomePage" class=" headerLogo">
+        <p class="p1">Kerimov Architects</p>
+      </div>
+      <NuxtLink v-else to="/" class="headerLogo">
         <p class="p1">Kerimov Architects</p>
       </NuxtLink>
     </div>
@@ -78,9 +84,7 @@ const isLinkActive = (path) => {
   return route.path.includes(localePath(path));
 };
 
-console.log('localePath /projects:', localePath('/projects'));
-console.log('localePath /about:', localePath('/about'));
-
+const isHomePage = computed(() => route.path === '/')
 </script>
 
 <style scoped lang="scss">

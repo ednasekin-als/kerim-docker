@@ -30,6 +30,12 @@ body {
   font-synthesis: none;
   background: var(--white);
   color: var(--black);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
 }
 
 ul {
@@ -1271,13 +1277,14 @@ a.tag {
 }
 
 .arrow {
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  transform-origin: center center;
+  will-change: transform;
 }
 
 .arrow.open {
-  transform: rotate(180deg);
+  transform: scaleY(-1);
 }
-
 
 .mapboxgl-map {
   font:12px/20px Helvetica Neue,Arial,Helvetica,sans-serif;

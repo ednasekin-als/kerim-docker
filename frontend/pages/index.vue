@@ -132,6 +132,7 @@ useHead({
     overflow: hidden;
     width: 100%;
     height: 100vh;
+    height: -webkit-fill-available;
   }
 
   &__intro {

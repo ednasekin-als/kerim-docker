@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div v-if="post['gal_pub']" class="PrDet__aww row align-items-center offset-6">
+      <div v-if="post['gal_pub'].length > 0" class="PrDet__aww row align-items-center offset-6">
         <div class="achievements-container">
           <transition name="fade" mode="out-in">
             <img
@@ -94,6 +94,7 @@
             :initial-slide="slideIndex"
             :modules="modules"
             :slides-per-view="1"
+            :zoom="true"
             :allow-touch-move="true"
             :keyboard="{ enabled: true }"
             :mousewheel="{ forceToAxis: true }"
@@ -101,13 +102,13 @@
             :navigation="{ nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }" class="PrDet__slider">
             <swiper-slide v-for="(item, key) in allGal" :key="key">
               <template v-if="item && isYouTubeVideo(item)">
-                <div class="PrDet__slide">
+                <div class="PrDet__slide ">
                   <iframe width="90%" height="400" :src="embedYouTubeURL(item)" frameborder="0"
                     allowfullscreen></iframe>
                 </div>
               </template>
               <template v-else>
-                <div class="PrDet__slide">
+                <div class="PrDet__slide swiper-zoom-container">
                   <img :src="item" alt="" />
                 </div>
               </template>
@@ -135,7 +136,7 @@
 <script setup>
 import { useMain } from '~/store/main';
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation, Pagination, Keyboard, Mousewheel } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard, Mousewheel, Zoom } from 'swiper/modules';
 
 const route = useRoute();
 const store = useMain();
@@ -194,7 +195,7 @@ const embedYouTubeURL = (url) => {
 const startCarousel = () => {
   intervalId = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % post.value['gal_pub'].length
-  }, 3000)
+  }, 5000)
 }
 
 const clickImg = (key) => {
@@ -229,7 +230,7 @@ onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 })
 
-const modules = [Navigation, Pagination, Keyboard, Mousewheel];
+const modules = [Navigation, Pagination, Keyboard, Mousewheel, Zoom];
 
 const renderFraction = (currentClass, totalClass) => {
   return `<span class="${currentClass}"></span> <small>/ <span class="${totalClass}"></span></small>`;
@@ -628,4 +629,11 @@ const renderFraction = (currentClass, totalClass) => {
   opacity: 0;
 }
 
+.swiper-slide {
+  cursor: zoom-in;
+}
+
+.swiper-slide-zoomed {
+  cursor: zoom-out !important;
+}
 </style>
