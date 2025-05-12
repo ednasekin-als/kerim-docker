@@ -7,17 +7,17 @@
         </div>
       </div>
       <p class="h2" v-html="page[locale + '_tit_sm']"></p>
-      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 '>
+      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6'>
         <p class="p1 postContent">
           {{ stripAllTags(page[locale + '_val1']) }}
         </p>
       </div>
-      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-0 '>
+      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-18 offset-md-6 col-24 offset-6'>
         <p class="p1 postContent">
           {{ stripAllTags(page[locale + '_val2']) }}
         </p>
       </div>
-      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6 '>
+      <div class='col-xl- offset-xl- col-lg- offset-lg- col-md-12 offset-md-12 col-18 offset-6'>
         <p class="p1 postContent">
           {{ stripAllTags(page[locale + '_val3']) }}
         </p>

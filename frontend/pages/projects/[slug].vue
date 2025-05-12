@@ -155,8 +155,6 @@ const slug = computed(() => route.params.slug);
 const post = computed(() => store.projects.find((el) => el.slug === slug.value));
 const postIndex = computed(() => store.projects.findIndex((el) => el.slug === slug.value));
 
-console.log('post', post.value);
-
 const filteredProjects = computed(() => store.projects.filter((project) => project.slug !== slug.value));
 
 const seoTitle = computed(() => post.value ? post.value[locale.value + '_seo_tit'] || post.value[locale.value + '_tit'] : '');
