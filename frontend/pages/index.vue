@@ -132,7 +132,6 @@ useHead({
     overflow: hidden;
     width: 100%;
     height: 100vh;
-    height: -webkit-fill-available;
   }
 
   &__intro {
@@ -169,6 +168,7 @@ useHead({
     z-index: 2;
     height: 100%;
     padding: var(--main-pad);
+    height: -webkit-fill-available;
 
     .tag {
       color: #fff !important;
